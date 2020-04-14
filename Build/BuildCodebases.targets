@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Main Build script
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+  DefaultTargets="Build" >
+
+  <PropertyGroup>
+    <MSBuildProjectDirectoryWithSlash Condition="HasTrailingSlash('$(MSBuildProjectDirectory)')"
+    >$(MSBuildProjectDirectory)</MSBuildProjectDirectoryWithSlash>
+    <MSBuildProjectDirectoryWithSlash Condition="!HasTrailingSlash('$(MSBuildProjectDirectory)')"
+    >$(MSBuildProjectDirectory)\</MSBuildProjectDirectoryWithSlash>
+    <StopOnFirstFailure>true</StopOnFirstFailure>
+   </PropertyGroup>
+
+
+  <Target Name="RestoreNuGetPackages" Condition=" '@(Solutions)' != '' " >
+    <MSBuild Projects="%(Solutions.Identity)"
+      Condition=" '@(Solutions)' != '' "
+      Targets="Restore"
+      StopOnFirstFailure="$(StopOnFirstFailure)"
+      BuildInParallel="false" />
+    <OnError ExecuteTargets="RestoreNuGetPackagesError" />
+  </Target>
+  <Target Name="RestoreNuGetPackagesError" >
+    <Error Text="Restoring NuGet packages failed" />
+  </Target>
+
+  <Target Name="Clean" Condition=" '@(Solutions)' != '' " >
+    <Message Text="Cleaning projects: @(Solutions)" />
+    <MSBuild Projects="%(Solutions.Identity)"
+      Condition=" '@(Solutions)' != '' "
+      Targets="Clean"
+      StopOnFirstFailure="$(StopOnFirstFailure)"
+      BuildInParallel="false" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="RestoreNuGetPackages" >
+    <Message Text="MSBuildBinPath: $(MSBuildBinPath)" />
+    <Message Text="Building projects: @(Solutions)" />
+    <MSBuild Projects="%(Solutions.Identity)"
+      Condition=" '@(Solutions)' != '' "
+      Targets="Build"
+      StopOnFirstFailure="$(StopOnFirstFailure)"
+      BuildInParallel="false" />
+  </Target>
+
+</Project>
