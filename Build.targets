@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Initial Build script -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+  DefaultTargets="Build" >
+
+
+  <PropertyGroup>
+    <MSBuildProjectDirectoryWithSlash Condition="HasTrailingSlash('$(MSBuildProjectDirectory)')"
+    >$(MSBuildProjectDirectory)</MSBuildProjectDirectoryWithSlash>
+    <MSBuildProjectDirectoryWithSlash Condition="!HasTrailingSlash('$(MSBuildProjectDirectory)')"
+    >$(MSBuildProjectDirectory)\</MSBuildProjectDirectoryWithSlash>
+    <StopOnFirstFailure>true</StopOnFirstFailure>
+  </PropertyGroup>
+
+  <!--Top level codebases to build-->
+  <ItemGroup>
+    <BuildScripts Include="Examples\Build\Build.targets">
+      <BuildOrder>0</BuildOrder>
+    </BuildScripts>
+  </ItemGroup>
+
+  <!-- Cleans all codebases. -->
+  <Target Name="Clean" >
+    <!-- TODO: Clean in reverse order. -->
+    <Message Text="BuildScripts: @(BuildScripts)" />
+    <MSBuild Projects="@(BuildScripts)"
+      Targets="Clean"
+      StopOnFirstFailure="$(StopOnFirstFailure)" />
+  </Target>
+
+
+  <!-- Build all codebases. -->
+  <Target Name="Build" >
+    <!-- TODO: Clean in reverse order. -->
+    <Message Text="BuildScripts: @(BuildScripts)" />
+    <MSBuild Projects="@(BuildScripts)"
+      Targets="Build"
+      StopOnFirstFailure="$(StopOnFirstFailure)" />
+  </Target>
+
+  
+  <!--Tasks-->
+  <!--TODO: Not working, need to check-->
+  <!--<UsingTask
+    TaskName="Reverse"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+    <ParameterGroup>
+      <MyItemGroup ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <ReversedItems Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System"/>
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[          
+          List<ITaskItem> inputItems = new List<ITaskItem>(MyItemGroup);
+          var reversedItems = inputItems.Reverse();
+          ReversedItems = (ITaskItem[])reversedItems .ToArray(typeof(ITaskItem));
+      ]]>
+      </Code>
+    </Task>
+  </UsingTask>-->
+</Project>
