@@ -44,6 +44,7 @@ namespace HelloWorldTests {
             Assert.AreEqual(inputValue, returnValue, "Expected different input");
         }
 
+        // Intentionally making this test fail.
         [Test]
         public void TestReturnInputShallReturnsTheInputFail()
         {
