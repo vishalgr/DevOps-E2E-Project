@@ -24,7 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\Output\Bin\</OutputPath>  
+    <OutputPath>..\Output\Bin\</OutputPath>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
@@ -56,7 +56,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HelloWorld\HelloWorld.csproj">
+    <ProjectReference Include="..\Source\HelloWorld.csproj">
+      <Project>{c19c255a-d7ce-49be-95cc-81558a83dba1}</Project>
       <Name>HelloWorld</Name>
     </ProjectReference>
   </ItemGroup>
