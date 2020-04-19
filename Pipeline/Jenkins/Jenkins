@@ -30,13 +30,12 @@ pipeline {
             }
             steps {
                 script{
-                    println "Current stage is: ${STAGE_NAME}"
-                    // TODO: Cleaning work space is not working since access denied error is thrown.
-                    cleanWs disableDeferredWipeout: true, deleteDirs: true
+                   setup()
 
                     // Print all env variables set so far.
                     bat returnStatus: false, script:"set "
-                    dir("productArchive"){
+
+                    dir("productArchive") {
                         checkout scm
                         // TODO:  Below error occurs in the Jenkins console
                         // Command called: Build.bat 
@@ -57,9 +56,15 @@ pipeline {
             }
             steps {
                 script{
-                    println "Current stage is: ${STAGE_NAME}"
+                    setup()
                 }
             }
         }
     }
+}
+
+// ===== Methods =====
+def setup() {
+    println "Current stage is: ${STAGE_NAME}"
+    cleanWs disableDeferredWipeout: true, deleteDirs: true
 }
