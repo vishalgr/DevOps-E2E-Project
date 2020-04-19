@@ -17,7 +17,9 @@ set SCRIPT_DIR=%~dp0
 cd /D %SCRIPT_DIR%
 set TARGETS_SCRIPT=%SCRIPT_DIR%Build.targets
 set CPU_COUNT=1
-set MSBUILD_EXE=C:\VS2017\MSBuild\15.0\Bin\MSBuild.exe
+Rem using VSVARS throws error in Jenkins: \Java\jre1.8.0_172\bin"" was unexpected at this time.
+Rem Because of this issue, it is expected to provide this as a property from the properties file.
+Rem
 Rem TODO: Change the path to your VSinstallation path
 Rem set VSVARS=C:\VS2017\Common7\Tools\VsDevCmd.bat
 Rem initialize MSBuild path
@@ -27,7 +29,9 @@ Rem 	goto error
 Rem )
 Rem echo Invoking the VSVARS file: %VSVARS%
 Rem call %VSVARS%
-if errorlevel 1 goto error
+Rem if errorlevel 1 goto error
+
+REM set MSBUILD_EXE=C:\VS2017\MSBuild\15.0\Bin\MSBuild.exe
 
 Rem Defaullt arguments
 set CLEAN=true
@@ -69,19 +73,17 @@ if "%INCREMENTAL_BUILD%" EQU "true" if "%FULL_BUILD%" EQU "true" (
 	echo Input arguments 'full ' and 'incremental' are mutually exclusive.
 )
 
-
-
 Rem invoke MSBuild
 Rem Clean
 if "%CLEAN%" EQU "true" (
 	rem set BUILD_CMD_BASE=msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT% /verbosity:d
-	echo msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
-	%MSBUILD_EXE% /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
+	echo MSBuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
+	MSBuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
 	if errorlevel 1 goto error
 )
 
 Rem Build
-set BUILD_CMD_BASE=%MSBUILD_EXE% %TARGETS_SCRIPT% /m:%CPU_COUNT% /t:Build
+set BUILD_CMD_BASE=MSBuild.exe %TARGETS_SCRIPT% /m:%CPU_COUNT% /t:Build
 echo BUILD_CMD_BASE %BUILD_CMD_BASE%
 %BUILD_CMD_BASE%
 if errorlevel 1 goto error
