@@ -32,7 +32,7 @@ pipeline {
                 script{
                     println "Current stage is: ${STAGE_NAME}"
                     // TODO: Cleaning work space is not working since access denied error is thrown.
-                    //cleanWs()
+                    cleanWs disableDeferredWipeout: true, deleteDirs: true
 
                     // Print all env variables set so far.
                     bat returnStatus: false, script:"set "
