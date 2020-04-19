@@ -18,7 +18,7 @@ cd /D %SCRIPT_DIR%
 set TARGETS_SCRIPT=%SCRIPT_DIR%Build.targets
 set CPU_COUNT=1
 Rem using VSVARS throws error in Jenkins: \Java\jre1.8.0_172\bin"" was unexpected at this time.
-Rem Because of this issue, it is expected to provide this as a property from the properties file.
+Rem Because of this issue, it is expected to provide set MSBuild.exe path in the sytem variable 'PATH'.
 Rem
 Rem TODO: Change the path to your VSinstallation path
 Rem set VSVARS=C:\VS2017\Common7\Tools\VsDevCmd.bat
