@@ -41,7 +41,7 @@ pipeline {
                         // Command called: Build.bat 
                         // 21:41:54  \Java\jre1.8.0_172\bin"" was unexpected at this time.
 
-                        // bat returnStatus: false, script:"Build.bat"
+                        bat returnStatus: false, script:"Build.bat"
 
                     }
                 }
@@ -63,7 +63,7 @@ pipeline {
     }
 }
 
-// ===== Methods =====
+// ===== Functions =====
 def setup() {
     println "Current stage is: ${STAGE_NAME}"
     cleanWs disableDeferredWipeout: true, deleteDirs: true
