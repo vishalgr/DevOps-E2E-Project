@@ -24,6 +24,7 @@ if "VSVARS" EQU "" (
 	echo The environment variable 'VSVARS' is not set
 	goto error
 )
+echo Invoking the VSVARS file: %VSVARS%
 call %VSVARS%
 if errorlevel 1 goto error
 
