@@ -9,7 +9,7 @@ Rem
 Rem Example: 
 Rem 1. Build.Bat --clean
 Rem 2. Build.Bat --full
-Rem		which does clean and then build.
+Rem        which does clean and then build.
 Rem 2. Build.Bat --incremental
 
 echo Command called: %0 %*
@@ -24,14 +24,12 @@ Rem TODO: Change the path to your VSinstallation path
 Rem set VSVARS=C:\VS2017\Common7\Tools\VsDevCmd.bat
 Rem initialize MSBuild path
 Rem if "VSVARS" EQU "" (
-Rem 	echo The environment variable 'VSVARS' is not set
-Rem 	goto error
+Rem     echo The environment variable 'VSVARS' is not set
+Rem     goto error
 Rem )
 Rem echo Invoking the VSVARS file: %VSVARS%
 Rem call %VSVARS%
 Rem if errorlevel 1 goto error
-
-REM set MSBUILD_EXE=C:\VS2017\MSBuild\15.0\Bin\MSBuild.exe
 
 Rem Defaullt arguments
 set CLEAN=true
@@ -42,20 +40,20 @@ set INCREMENTAL_BUILD=
 :PARSE_ARGS
 if /I "%~1" EQU "--clean" (
     set CLEAN=true
-	shift
+    shift
     goto PARSE_ARGS
 )
 if /I "%~1" EQU "--incremental" (
     set INCREMENTAL_BUILD=true
-	set CLEAN=false	
-	set FULL_BUILD=false
-	shift
+    set CLEAN=false    
+    set FULL_BUILD=false
+    shift
     goto PARSE_ARGS
 )
 if /I "%~1" EQU "--full" (
-	set CLEAN=true
-	set FULL_BUILD=true
-	shift
+    set CLEAN=true
+    set FULL_BUILD=true
+    shift
     goto PARSE_ARGS
 )
 if "%~1" NEQ "" (
@@ -70,30 +68,27 @@ echo INCREMENTAL_BUILD %INCREMENTAL_BUILD%
 REM TODO:
 REM Build --full --incremental does not cates below error
 if "%INCREMENTAL_BUILD%" EQU "true" if "%FULL_BUILD%" EQU "true" (
-	echo Input arguments 'full ' and 'incremental' are mutually exclusive.
+    echo Input arguments 'full ' and 'incremental' are mutually exclusive.
 )
 
-Rem invoke MSBuild
+Rem Invoke MSBuild
+set BUILD_CMD_BASE=msbuild.exe /m:%CPU_COUNT% %TARGETS_SCRIPT% 
+
 Rem Clean
 if "%CLEAN%" EQU "true" (
-	rem set BUILD_CMD_BASE=msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT% /verbosity:d
-	echo MSBuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
-	MSBuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
-	if errorlevel 1 goto error
+    echo commandToExecute: %BUILD_CMD_BASE% /t:Clean
+    %BUILD_CMD_BASE% /t:Clean
+    if errorlevel 1 goto error
 )
 
 Rem Build
-set BUILD_CMD_BASE=MSBuild.exe %TARGETS_SCRIPT% /m:%CPU_COUNT% /t:Build
-echo BUILD_CMD_BASE %BUILD_CMD_BASE%
-%BUILD_CMD_BASE%
+echo commandToExecute: %BUILD_CMD_BASE% /t:Build
+%BUILD_CMD_BASE% /t:Build
 if errorlevel 1 goto error
 
 Rem TODO: Publish to be performed
 
 echo Build succeeded
-if defined BUILD_INTERACTIVE (
-    pause
-)
 goto :eof
 
 :error
