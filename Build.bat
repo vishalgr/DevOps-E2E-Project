@@ -17,15 +17,16 @@ set SCRIPT_DIR=%~dp0
 cd /D %SCRIPT_DIR%
 set TARGETS_SCRIPT=%SCRIPT_DIR%Build.targets
 set CPU_COUNT=1
+set MSBUILD_EXE=C:\VS2017\MSBuild\15.0\Bin\MSBuild.exe
 Rem TODO: Change the path to your VSinstallation path
-set VSVARS=C:\VS2017\Common7\Tools\VsDevCmd.bat
+Rem set VSVARS=C:\VS2017\Common7\Tools\VsDevCmd.bat
 Rem initialize MSBuild path
-if "VSVARS" EQU "" (
-	echo The environment variable 'VSVARS' is not set
-	goto error
-)
-echo Invoking the VSVARS file: %VSVARS%
-call %VSVARS%
+Rem if "VSVARS" EQU "" (
+Rem 	echo The environment variable 'VSVARS' is not set
+Rem 	goto error
+Rem )
+Rem echo Invoking the VSVARS file: %VSVARS%
+Rem call %VSVARS%
 if errorlevel 1 goto error
 
 Rem Defaullt arguments
@@ -75,14 +76,14 @@ Rem Clean
 if "%CLEAN%" EQU "true" (
 	rem set BUILD_CMD_BASE=msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT% /verbosity:d
 	echo msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
-	msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
+	%MSBUILD_EXE% /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
 	if errorlevel 1 goto error
 )
 
 Rem Build
-set BUILD_CMD_BASE=msbuild.exe %TARGETS_SCRIPT% /m:%CPU_COUNT% /t:Clean
+set BUILD_CMD_BASE=%MSBUILD_EXE% %TARGETS_SCRIPT% /m:%CPU_COUNT% /t:Build
 echo BUILD_CMD_BASE %BUILD_CMD_BASE%
-%BUILD_CMD_BASE% /m:%CPU_COUNT% /t:Build
+%BUILD_CMD_BASE%
 if errorlevel 1 goto error
 
 Rem TODO: Publish to be performed
