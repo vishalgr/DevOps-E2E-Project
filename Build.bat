@@ -1,4 +1,5 @@
 @echo off
+setlocal EnableDelayedExpansion
 Rem This script initializes the required tools and invokes the build script. This script depends on the environment variable 
 Rem VSVARS32=C:\VS2017\Common7\Tools\VsDevCmd.bat
 Rem 
@@ -11,20 +12,19 @@ Rem 2. Build.Bat --full
 Rem		which does clean and then build.
 Rem 2. Build.Bat --incremental
 
-setlocal EnableDelayedExpansion
 echo Command called: %0 %*
 set SCRIPT_DIR=%~dp0
 cd /D %SCRIPT_DIR%
 set TARGETS_SCRIPT=%SCRIPT_DIR%Build.targets
 set CPU_COUNT=1
 Rem TODO: Change the path to your VSinstallation path
-set VSVARS32=C:\VS2017\Common7\Tools\VsDevCmd.bat
+set VSVARS=C:\VS2017\Common7\Tools\VsDevCmd.bat
 Rem initialize MSBuild path
-if "VSVARS32" EQU "" (
-	echo The environment variable 'VSVARS32' is not set
+if "VSVARS" EQU "" (
+	echo The environment variable 'VSVARS' is not set
 	goto error
 )
-call "%VSVARS32%"
+call %VSVARS%
 if errorlevel 1 goto error
 
 Rem Defaullt arguments
