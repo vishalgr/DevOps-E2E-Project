@@ -13,18 +13,18 @@ Rem 2. Build.Bat --incremental
 
 setlocal EnableDelayedExpansion
 echo Command called: %0 %*
-set SCRIPT_DIR=%~dp0
-cd /D %SCRIPT_DIR%
+set SCRIPT_DIR=%~f1
+cd  %SCRIPT_DIR%
 set TARGETS_SCRIPT=%SCRIPT_DIR%Build.targets
 set CPU_COUNT=1
 Rem TODO: Change the path to your VSinstallation path
-set VSVARS32=C:\VS2017\Common7\Tools\VsDevCmd.bat
+set VSVARS32="D:\installed sw\VSIUAL STUDIO\Common7\Tools\VsDevCmd.bat"
 Rem initialize MSBuild path
 if "VSVARS32" EQU "" (
 	echo The environment variable 'VSVARS32' is not set
 	goto error
 )
-call "%VSVARS32%"
+rem call %VSVARS32%
 if errorlevel 1 goto error
 
 Rem Defaullt arguments
@@ -74,23 +74,23 @@ Rem Clean
 if "%CLEAN%" EQU "true" (
 	rem set BUILD_CMD_BASE=msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT% /verbosity:d
 	echo msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
-	msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
+	"D:\installed sw\VSIUAL STUDIO\MSBuild\Current\Bin\MSBuild.exe" /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
 	if errorlevel 1 goto error
 )
 
 Rem Build
-set BUILD_CMD_BASE=msbuild.exe %TARGETS_SCRIPT% /m:%CPU_COUNT% /t:Clean
+set BUILD_CMD_BASE= %TARGETS_SCRIPT% /m:%CPU_COUNT% /t:Clean
 echo BUILD_CMD_BASE %BUILD_CMD_BASE%
-%BUILD_CMD_BASE% /m:%CPU_COUNT% /t:Build
+"D:\installed sw\VSIUAL STUDIO\MSBuild\Current\Bin\MSBuild.exe" %TARGETS_SCRIPT% /m:%CPU_COUNT% /t:Clean /m:%CPU_COUNT% /t:Build
 if errorlevel 1 goto error
 
 Rem TODO: Publish to be performed
-
 echo Build succeeded
 if defined BUILD_INTERACTIVE (
     pause
 )
 goto :eof
+
 
 :error
 echo Build failed
