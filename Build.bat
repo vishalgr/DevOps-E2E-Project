@@ -1,4 +1,5 @@
 @echo off
+setlocal EnableDelayedExpansion
 Rem This script initializes the required tools and invokes the build script. This script depends on the environment variable 
 Rem VSVARS32=C:\VS2017\Common7\Tools\VsDevCmd.bat
 Rem 
@@ -8,24 +9,27 @@ Rem
 Rem Example: 
 Rem 1. Build.Bat --clean
 Rem 2. Build.Bat --full
-Rem		which does clean and then build.
+Rem        which does clean and then build.
 Rem 2. Build.Bat --incremental
 
-setlocal EnableDelayedExpansion
 echo Command called: %0 %*
 set SCRIPT_DIR=%~dp0
 cd /D %SCRIPT_DIR%
 set TARGETS_SCRIPT=%SCRIPT_DIR%Build.targets
 set CPU_COUNT=1
+Rem using VSVARS throws error in Jenkins: \Java\jre1.8.0_172\bin"" was unexpected at this time.
+Rem Because of this issue, it is expected to provide set MSBuild.exe path in the sytem variable 'PATH'.
+Rem
 Rem TODO: Change the path to your VSinstallation path
-set VSVARS32=C:\VS2017\Common7\Tools\VsDevCmd.bat
+Rem set VSVARS=C:\VS2017\Common7\Tools\VsDevCmd.bat
 Rem initialize MSBuild path
-if "VSVARS32" EQU "" (
-	echo The environment variable 'VSVARS32' is not set
-	goto error
-)
-call "%VSVARS32%"
-if errorlevel 1 goto error
+Rem if "VSVARS" EQU "" (
+Rem     echo The environment variable 'VSVARS' is not set
+Rem     goto error
+Rem )
+Rem echo Invoking the VSVARS file: %VSVARS%
+Rem call %VSVARS%
+Rem if errorlevel 1 goto error
 
 Rem Defaullt arguments
 set CLEAN=true
@@ -36,20 +40,20 @@ set INCREMENTAL_BUILD=
 :PARSE_ARGS
 if /I "%~1" EQU "--clean" (
     set CLEAN=true
-	shift
+    shift
     goto PARSE_ARGS
 )
 if /I "%~1" EQU "--incremental" (
     set INCREMENTAL_BUILD=true
-	set CLEAN=false	
-	set FULL_BUILD=false
-	shift
+    set CLEAN=false    
+    set FULL_BUILD=false
+    shift
     goto PARSE_ARGS
 )
 if /I "%~1" EQU "--full" (
-	set CLEAN=true
-	set FULL_BUILD=true
-	shift
+    set CLEAN=true
+    set FULL_BUILD=true
+    shift
     goto PARSE_ARGS
 )
 if "%~1" NEQ "" (
@@ -64,32 +68,27 @@ echo INCREMENTAL_BUILD %INCREMENTAL_BUILD%
 REM TODO:
 REM Build --full --incremental does not cates below error
 if "%INCREMENTAL_BUILD%" EQU "true" if "%FULL_BUILD%" EQU "true" (
-	echo Input arguments 'full ' and 'incremental' are mutually exclusive.
+    echo Input arguments 'full ' and 'incremental' are mutually exclusive.
 )
 
+Rem Invoke MSBuild
+set BUILD_CMD_BASE=msbuild.exe /m:%CPU_COUNT% %TARGETS_SCRIPT% 
 
-
-Rem invoke MSBuild
 Rem Clean
 if "%CLEAN%" EQU "true" (
-	rem set BUILD_CMD_BASE=msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT% /verbosity:d
-	echo msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
-	msbuild.exe /m:%CPU_COUNT% /t:Clean %TARGETS_SCRIPT%
-	if errorlevel 1 goto error
+    echo commandToExecute: %BUILD_CMD_BASE% /t:Clean
+    %BUILD_CMD_BASE% /t:Clean
+    if errorlevel 1 goto error
 )
 
 Rem Build
-set BUILD_CMD_BASE=msbuild.exe %TARGETS_SCRIPT% /m:%CPU_COUNT% /t:Clean
-echo BUILD_CMD_BASE %BUILD_CMD_BASE%
-%BUILD_CMD_BASE% /m:%CPU_COUNT% /t:Build
+echo commandToExecute: %BUILD_CMD_BASE% /t:Build
+%BUILD_CMD_BASE% /t:Build
 if errorlevel 1 goto error
 
 Rem TODO: Publish to be performed
 
 echo Build succeeded
-if defined BUILD_INTERACTIVE (
-    pause
-)
 goto :eof
 
 :error
