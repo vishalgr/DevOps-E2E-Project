@@ -7,8 +7,8 @@
     <ProjectGuid>{5D3CE739-FFAA-4389-A96E-A6E291BC8783}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HelloWorldTests</RootNamespace>
-    <AssemblyName>HelloWorldTests</AssemblyName>
+    <RootNamespace>DevOps.Tests.HelloWorldTests</RootNamespace>
+    <AssemblyName>DevOps.Tests.HelloWorldTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

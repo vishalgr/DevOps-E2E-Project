@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace DevOps.Tests
+namespace DevOps.Tests.TestRunner
 {
 
     [TestFixture]

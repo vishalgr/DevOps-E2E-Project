@@ -12,7 +12,6 @@
     <MSBuildProjectDirectoryWithSlash Condition="!HasTrailingSlash('$(MSBuildProjectDirectory)')"
     >$(MSBuildProjectDirectory)\</MSBuildProjectDirectoryWithSlash>
     <StopOnFirstFailure>true</StopOnFirstFailure>
-    <NugetPackagesGlobal>%userprofile%\.nuget\packages</NugetPackagesGlobal>
    </PropertyGroup>
 
 

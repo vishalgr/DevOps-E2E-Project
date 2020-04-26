@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Tools Paths
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <NugetPackagesGlobal>$(userprofile)\.nuget\packages\</NugetPackagesGlobal>
+    <NUnitConsoleRunnerDir>$(NugetPackagesGlobal)nunit.consolerunner\3.11.1\tools\</NUnitConsoleRunnerDir>
+   </PropertyGroup>
+</Project>

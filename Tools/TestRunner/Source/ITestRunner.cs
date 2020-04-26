@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevOps
+namespace DevOps.TestRunner
 {
     interface ITestRunner {
-        int Execute();
+        int Execute(string testAssembly);
 
-        List<string> FindTestAssemblies(string searchDirectory);
+        List<string> FindTestAssemblies(DirectoryInfo searchDirectory);
     }
 }
