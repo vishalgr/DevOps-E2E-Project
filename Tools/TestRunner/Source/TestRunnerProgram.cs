@@ -14,7 +14,8 @@ namespace DevOps.TestRunner
             if (! arguments.Parse(args)) {
                 Console.WriteLine("Parsing input arguments failed: " + arguments.ErrorMessage);
                 Console.WriteLine(Arguments.Usage);
-                throw new  Exception("Test runner execution failed");
+                return -1;
+                //throw new  Exception("Test runner execution failed");
             }
 
             ITestRunner testRunner = GetTestRunner(arguments);
@@ -25,7 +26,7 @@ namespace DevOps.TestRunner
                     exitCode = -1;
                 }
             }
-            
+            Console.WriteLine("TestRunner executed successfully");
             return exitCode;
         }
 
