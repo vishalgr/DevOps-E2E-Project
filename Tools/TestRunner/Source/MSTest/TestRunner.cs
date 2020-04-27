@@ -11,7 +11,7 @@ namespace DevOps.TestRunner.MSTest
     class TestRunner : ITestRunner
     {
 
-        public int Execute(string testAssembly) {
+        public int Execute(string testAssembly, DirectoryInfo outPutDirectory) {
             throw new NotImplementedException();
         }
 

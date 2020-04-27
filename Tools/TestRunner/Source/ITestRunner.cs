@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DevOps.TestRunner
 {
     interface ITestRunner {
-        int Execute(string testAssembly);
+        int Execute(string testAssembly, DirectoryInfo outPutDirectory);
 
         List<string> FindTestAssemblies(DirectoryInfo searchDirectory);
     }

@@ -15,7 +15,7 @@ namespace DevOps.TestRunner.NUnit
             this.executor = executor;
         }
 
-        int ITestRunner.Execute(string testAssembly) {
+        int ITestRunner.Execute(string testAssembly, DirectoryInfo outPutDirectory) {
             // TODO: Implementation is due.
             Console.WriteLine(executor);
             return 0;

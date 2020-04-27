@@ -21,7 +21,7 @@ namespace DevOps.TestRunner
             ITestRunner testRunner = GetTestRunner(arguments);
             var testAssemblies = testRunner.FindTestAssemblies(arguments.AssemblyDirectory);
             foreach (var testAssembly in testAssemblies) {
-                int returnValue = testRunner.Execute(testAssembly);
+                int returnValue = testRunner.Execute(testAssembly, arguments.OutputDirectory);
                 if (returnValue < 0) {
                     exitCode = -1;
                 }
