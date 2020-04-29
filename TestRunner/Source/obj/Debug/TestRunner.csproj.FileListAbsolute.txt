@@ -1,0 +1,7 @@
+D:\DEVOPS_test-branches-BasicPipeline\Tools\TestRunner\Output\DevOps.TestRunner.exe.config
+D:\DEVOPS_test-branches-BasicPipeline\Tools\TestRunner\Output\DevOps.TestRunner.exe
+D:\DEVOPS_test-branches-BasicPipeline\Tools\TestRunner\Output\DevOps.TestRunner.pdb
+D:\DEVOPS_test-branches-BasicPipeline\Tools\TestRunner\Source\obj\Debug\TestRunner.csproj.CoreCompileInputs.cache
+D:\DEVOPS_test-branches-BasicPipeline\Tools\TestRunner\Source\obj\Debug\DevOps.TestRunner.exe
+D:\DEVOPS_test-branches-BasicPipeline\Tools\TestRunner\Source\obj\Debug\DevOps.TestRunner.pdb
+D:\DEVOPS_test-branches-BasicPipeline\Tools\TestRunner\Source\obj\Debug\TestRunner.csprojAssemblyReference.cache

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-run id="0" runstate="Runnable" testcasecount="0" result="Failed" label="Invalid" total="0" passed="0" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.11.1.0" clr-version="4.0.30319.42000" start-time="2020-04-27 08:17:41Z" end-time="2020-04-27 08:17:41Z" duration="0.512573">
+  <command-line><![CDATA["D:\Views\ConsoleApp3\packages\NUnit.ConsoleRunner.3.11.1\tools\nunit3-console.exe" nunit3-console.exe  D:\Views\ConsoleApp3\ConsoleApp3\bin\Debug\ConsoleApp3.dll--result\  ]]></command-line>
+  <test-suite type="Assembly" id="1-1" name="nunit3-console.exe" fullname="D:\DEVOPS_test-branches-BasicPipeline\Tools\TestRunner\Output\nunit3-console.exe" testcasecount="0" runstate="NotRunnable" result="Failed" label="Invalid">
+    <properties>
+      <property name="_SKIPREASON" value="File not found: D:\DEVOPS_test-branches-BasicPipeline\Tools\TestRunner\Output\nunit3-console.exe" />
+    </properties>
+    <reason>
+      <message>File not found: D:\DEVOPS_test-branches-BasicPipeline\Tools\TestRunner\Output\nunit3-console.exe</message>
+    </reason>
+  </test-suite>
+  <test-suite type="Unknown" id="2-1" name="" fullname="D:\Views\ConsoleApp3\ConsoleApp3\bin\Debug\ConsoleApp3.dll--result\" testcasecount="0" runstate="NotRunnable" result="Failed" label="Invalid">
+    <properties>
+      <property name="_SKIPREASON" value="File not found: D:\Views\ConsoleApp3\ConsoleApp3\bin\Debug\ConsoleApp3.dll--result\" />
+    </properties>
+    <reason>
+      <message>File not found: D:\Views\ConsoleApp3\ConsoleApp3\bin\Debug\ConsoleApp3.dll--result\</message>
+    </reason>
+  </test-suite>
+</test-run>
