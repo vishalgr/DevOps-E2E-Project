@@ -1,0 +1,7 @@
+D:\installed sw\Visual Studio WorkSpace\CSVConverter\CSVConverter\bin\Debug\CSVConverter.exe.config
+D:\installed sw\Visual Studio WorkSpace\CSVConverter\CSVConverter\bin\Debug\CSVConverter.exe
+D:\installed sw\Visual Studio WorkSpace\CSVConverter\CSVConverter\bin\Debug\CSVConverter.pdb
+D:\installed sw\Visual Studio WorkSpace\CSVConverter\CSVConverter\obj\Debug\CSVConverter.csprojAssemblyReference.cache
+D:\installed sw\Visual Studio WorkSpace\CSVConverter\CSVConverter\obj\Debug\CSVConverter.csproj.CoreCompileInputs.cache
+D:\installed sw\Visual Studio WorkSpace\CSVConverter\CSVConverter\obj\Debug\CSVConverter.exe
+D:\installed sw\Visual Studio WorkSpace\CSVConverter\CSVConverter\obj\Debug\CSVConverter.pdb
