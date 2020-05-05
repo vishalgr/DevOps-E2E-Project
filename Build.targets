@@ -17,6 +17,9 @@
     <BuildScripts Include="Examples\Build\Build.targets">
       <BuildOrder>0</BuildOrder>
     </BuildScripts>
+     <BuildScripts Include="Tools\Build\Build.targets">
+      <BuildOrder>1</BuildOrder>
+    </BuildScripts>
   </ItemGroup>
 
   <!-- Cleans all codebases. -->
