@@ -7,8 +7,8 @@
     <ProjectGuid>{C19C255A-D7CE-49BE-95CC-81558A83DBA1}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HelloWorld</RootNamespace>
-    <AssemblyName>HelloWorld</AssemblyName>
+    <RootNamespace>DevOps.HelloWorldTests</RootNamespace>
+    <AssemblyName>DevOps.HelloWorldTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
