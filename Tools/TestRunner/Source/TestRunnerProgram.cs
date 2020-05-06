@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace DevOps.TestRunner
 {
     class TestRunnerProgram {
-        static int Main(string[] args) 
-        {
+        static int Main(string[] args) {
             int exitCode = 0;
             // Parse arguments
             var arguments = new Arguments();
