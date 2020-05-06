@@ -16,9 +16,27 @@ namespace DevOps.TestRunner.NUnit
         }
 
         int ITestRunner.Execute(string testAssembly, DirectoryInfo outPutDirectory) {
-            // TODO: Implementation is due.
-            Console.WriteLine(executor);
-            return 0;
+            //string filepath = @"D:\DevopsTestResults\sample.txt";
+            string xmlName;
+            xmlName = Path.GetFileNameWithoutExtension(testAssembly);
+            string outpath = outPutDirectory.FullName;
+            Process process = new Process();
+            process.StartInfo.FileName =executor;
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardInput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.Arguments =testAssembly+" --result "+outpath+"\\"+xmlName+".xml";
+            process.Start();
+            process.StandardInput.Close();
+            Console.WriteLine(process.StandardOutput.ReadToEnd());
+            if (process.ExitCode != 0)
+            {
+                Console.WriteLine(process.StandardError.ReadToEnd());
+            }
+            process.WaitForExit();
+            return process.ExitCode;
         }
 
         List<string> ITestRunner.FindTestAssemblies(DirectoryInfo searchDirectory) {

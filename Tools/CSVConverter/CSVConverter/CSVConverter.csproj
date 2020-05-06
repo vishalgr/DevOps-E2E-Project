@@ -4,21 +4,22 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{717B7B08-9FE9-4174-831C-F486B11B3C41}</ProjectGuid>
+    <ProjectGuid>{ABE12F63-5057-41FB-8677-3E4577849B77}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DevOps.TestRunner</RootNamespace>
-    <AssemblyName>DevOps.TestRunner</AssemblyName>
+    <RootNamespace>CSVConverter</RootNamespace>
+    <AssemblyName>CSVConverter</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,7 +28,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -44,31 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
-    <Compile Include="ITestRunner.cs" />
-    <Compile Include="MSTest\TestRunner.cs" />
-    <Compile Include="Nunit\TestRunner.cs" />
-    <Compile Include="TestRunnerProgram.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="NUnit">
-      <Version>3.12.0</Version>
-    </PackageReference>
-    <PackageReference Include="NUnit.ConsoleRunner">
-      <Version>3.11.1</Version>
-    </PackageReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\..\Build\ToolPaths.targets" />
-  <Target Name="CopyFiles">
-    <!-- TODO: Move to generic script at this subcodebase -->
-    <ItemGroup>
-      <_CopyItems Include="$(NUnitConsoleRunnerDir)\**\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(_CopyItems)" DestinationFolder="$(OutputPath)..\..\..\Output\Work\Binaries\NunitConsoleRunner\" />
-  </Target>
-  <Target Name="AfterBuild" DependsOnTargets="CopyFiles" />
 </Project>
