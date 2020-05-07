@@ -10,7 +10,7 @@ namespace CSVConverter
    
     class Arguments
     {
-        private DirectoryInfo assemblyDirectory;
+        private DirectoryInfo xmlfileDirectory;
         private DirectoryInfo outPutDirectory;
         private readonly StringBuilder errorMessage = new StringBuilder();
         private static readonly string currentAssembly = typeof(Arguments).Assembly.GetName().Name;
@@ -28,8 +28,8 @@ namespace CSVConverter
             {
                 switch (commandLinArgs[i].ToUpper().Trim())
                 {
-                    case "--ASSEMLBYDIRECTORY":
-                        assemblyDirectory = new DirectoryInfo(commandLinArgs[++i].Trim());
+                    case "--XMLFILEDIRECTORY":
+                        xmlfileDirectory = new DirectoryInfo(commandLinArgs[++i].Trim());
                         break;
                     case "--OUTPUTDIRECTORY":
                         outPutDirectory = new DirectoryInfo(commandLinArgs[++i].Trim());
@@ -53,14 +53,14 @@ namespace CSVConverter
                 var help = new StringBuilder("Usage information:");
                 help.AppendLine(
                     currentAssembly +
-                    " --AssemlbyDirectory <directory path> --OutputDirectory <directory path>"
+                    " --XmlFileDirectory <directory path> --OutputDirectory <directory path>"
                 );
               
-                help.AppendLine("AssemlbyDirectory: Directory where XML assemblies are located");
+                help.AppendLine("XmlFileDirectory: Directory where XML files are located");
                 help.AppendLine("OutputDirectory: Directory where CSV results to be geneareated at");
                 help.AppendLine(
                     "Example: " + currentAssembly +
-                    @"  --AssemlbyDirectory C:\TestsResultsXml --OutputDirectory C:\TestResultsCsv"
+                    @"  --XmlFileDirectory C:\TestsResultsXml --OutputDirectory C:\TestResultsCsv"
                 );
                 return help.ToString();
             }
@@ -70,11 +70,11 @@ namespace CSVConverter
 
 
         #region Public arguments
-        public DirectoryInfo AssemblyDirectory
+        public DirectoryInfo XmlFileDirectory
         {
             get
             {
-                return assemblyDirectory;
+                return xmlfileDirectory;
             }
         }
 
@@ -98,7 +98,7 @@ namespace CSVConverter
         private bool Validate()
         {
             bool isValidationSuccess = true;
-            if (!checkDirectory(assemblyDirectory))
+            if (!checkDirectory(xmlfileDirectory))
             {
                 isValidationSuccess = false;
             }

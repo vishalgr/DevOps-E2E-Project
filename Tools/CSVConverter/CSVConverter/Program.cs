@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using System.IO;
 using System.IO.Pipes;
 using System.Xml;
+using System.Runtime.Remoting.Messaging;
 
 namespace CSVConverter {
     class Program {
@@ -20,22 +21,31 @@ namespace CSVConverter {
                 return -1;
                 //throw new  Exception("Test runner execution failed");
             }
-            var testCases = new TestCases();
-            var testAssemblies=testCases.FindTestAssemblies(arguments.AssemblyDirectory);
-            foreach (var testAssembly in testAssemblies)
+            try
             {
-                testCases.ParseResultFile(testAssembly);
-                string CsvName;
-                CsvName = Path.GetFileNameWithoutExtension(testAssembly);
-                FileInfo outputFile = new FileInfo(arguments.OutputDirectory.FullName+"\\"+CsvName+".csv");
-                if (!outputFile.Directory.Exists)
+                var testCases = new TestCases();
+                var xmlList = testCases.FindXMLFiles(arguments.XmlFileDirectory);
+                foreach (var xmlfiles in xmlList)
                 {
-                    Directory.CreateDirectory(outputFile.DirectoryName);
+                    testCases.ParseResultFile(xmlfiles);
+                    FileInfo outputFile = new FileInfo(arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
+                    if (!outputFile.Directory.Exists)
+                    {
+                        Directory.CreateDirectory(outputFile.DirectoryName);
+                    }
+                    testCases.WriteIntoCsv(outputFile.FullName);
+                    
                 }
-                testCases.WriteIntoCsv(outputFile.FullName);
-                Console.WriteLine("The CSV FILE IS STORED IN     "+ arguments.OutputDirectory.FullName + "\\" + CsvName + ".csv");
+                Console.WriteLine("The CSV FILE IS STORED IN     " + arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
+                return 1;
+               
             }
-            return 1;
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return -1;
+
+            }
         }
     }
     enum TestStatus {
@@ -102,15 +112,15 @@ namespace CSVConverter {
             }
         }
 
-     public  List<string> FindTestAssemblies(DirectoryInfo searchDirectory)
+     public  List<string> FindXMLFiles(DirectoryInfo searchDirectory)
         {
-            List<string> testAssemblies = new List<string>();
+            List<string> xmlFiles = new List<string>();
             foreach (var file in searchDirectory.GetFiles(("*.xml")))
             {
-                testAssemblies.Add(file.FullName);
+                xmlFiles.Add(file.FullName);
             }
 
-            return testAssemblies;
+            return xmlFiles;
         }
 
         public void WriteIntoCsv(string filePath) {

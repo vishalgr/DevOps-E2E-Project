@@ -5,3 +5,16 @@ D:\DevopsFinalBranchEdit\Branches\branchesBasicPipeline\DEVOPS_test\Tools\CSVCon
 D:\DevopsFinalBranchEdit\Branches\branchesBasicPipeline\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.exe
 D:\DevopsFinalBranchEdit\Branches\branchesBasicPipeline\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.pdb
 D:\DevopsFinalBranchEdit\Branches\branchesBasicPipeline\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.csprojAssemblyReference.cache
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\CSVConverter\bin\Debug\CSVConverter.exe.config
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\CSVConverter\bin\Debug\CSVConverter.exe
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\CSVConverter\bin\Debug\CSVConverter.pdb
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.csprojAssemblyReference.cache
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.csproj.CoreCompileInputs.cache
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.exe
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.pdb
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\CSVConverter\Output\CSVConverter.exe.config
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\CSVConverter\Output\CSVConverter.exe
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\CSVConverter\Output\CSVConverter.pdb
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\Output\CSVConverter.exe.config
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\Output\CSVConverter.exe
+C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\Output\CSVConverter.pdb
