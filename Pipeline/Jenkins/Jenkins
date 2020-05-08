@@ -1,0 +1,70 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    agent none
+    triggers {
+        // Check for the commits on every one min.
+        pollSCM('* * * * *') 
+    }
+    options {
+        // Don't start with the next run of current run is inprogress.
+        disableConcurrentBuilds()
+
+        // Number of build information to retain in UI.
+        buildDiscarder(logRotator(daysToKeepStr: '30'))
+
+        // Checkout only where it is required.
+        skipDefaultCheckout()
+    }
+    environment {
+        // Define global variables here
+        var1 = "value1"
+    }
+    stages {
+        stage('Build') {
+            // TODO: Build server label to be used
+            agent { label 'BuildServer' }
+            options {
+               timeout(time: 10, unit: 'MINUTES')
+               timestamps()
+            }
+            steps {
+                script{
+                   setup()
+
+                    // Print all env variables set so far.
+                    bat returnStatus: false, script:"set "
+
+                    dir("productArchive") {
+                        checkout scm
+                        // TODO:  Below error occurs in the Jenkins console
+                        // Command called: Build.bat 
+                        // 21:41:54  \Java\jre1.8.0_172\bin"" was unexpected at this time.
+
+                        bat returnStatus: false, script:"Build.bat"
+
+                    }
+                }
+            }
+        }
+        stage('Test') {
+            // TODO: Test machine label to be used
+            agent { label 'TestMachine' }
+            options {
+               timeout(time: 10, unit: 'MINUTES')
+               timestamps()
+            }
+            steps {
+                script{
+                    setup()
+                }
+            }
+        }
+    }
+}
+
+// ===== Functions =====
+def setup() {
+    println "Current stage is: ${STAGE_NAME}"
+    cleanWs disableDeferredWipeout: true, deleteDirs: true
+}
