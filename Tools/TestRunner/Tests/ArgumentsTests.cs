@@ -7,72 +7,95 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using DevOps.TestRunner;
 using System.Activities.Expressions;
+using System.IO;
 
-namespace DevOps.Tests.TestRunner
-{
+namespace DevOps.Tests.TestRunner {
 
     [TestFixture]
-    public class ArgumentsTests
-    {
+    public class ArgumentsTests {
+        private static string assemblyPath = System.Reflection.Assembly.GetAssembly(typeof(DevOps.Tests.TestRunner.ArgumentsTests)).Location;
+        private static string assemblyDirectory = Path.GetDirectoryName(assemblyPath);
+
+        // Note: NunitConsoleRunner have required binaires being copied as part of the build.
+        private static string nunitConsoleRunner = Path.GetFullPath(
+            Path.Combine(
+                assemblyDirectory,
+                @"..\..\..\Output\Work\Binaries\NunitConsoleRunner\nunit3-console.exe"
+            )
+        );
+
+        private static string testAssemblyPath = Path.GetFullPath(
+                Path.Combine(assemblyDirectory, @"..\..\..\Examples\HelloWorld\Output\Bin\")
+            );
+
         //string myString = "DevOps.TestRunner --Executor  D:\\Applications\\nunit-console\\nunit3-console.exe  --TestFramework  NUnit --AssemlbyDirectory D:\\Views\\Testing\\Testing\\bin\\Debug --OutputDirectory  D:\\DevopsTestResults";
         //string[] myString.Cast<char>().Cast<string>().ToArray();
         private DevOps.TestRunner.Arguments TestingObject;
-
-        private static string[] InputToTest = {
-            "DevOps.TestRunner",
-            "--Executor",
-            " D:\\Applications\\nunit-console\\nunit3-console.exe",
-            " --TestFramework",
-            " NUnit",
-            " --AssemlbyDirectory",
-            "D:\\Views\\Testing\\Testing\\bin\\Debug",
-            "--OutputDirectory",
-            " D:\\DevopsTestResults"
+        private static  DirectoryInfo outputDirecttDirectory = new DirectoryInfo(Path.Combine(assemblyDirectory, "Work"));
+        static object[] testCaseSourceData = {
+            new Int32[] { 12, 3, 4 },
+            new Int32[] { 12, 2, 6 },
+            new Int32[] { 12, 4, 3 }
         };
 
-        private static string[] InputToTest2 = {
-            "DevOps.TestRunner",
+        // TODO: Below value to extracted dynamically
+        // "D:\\Views\\Testing\\Testing\\bin\\Debug"
+        private static string[] validArguments = {
             "--Executor",
-            " D:\\Applications\\nunit3-console.exe",
-            " --TestFramework",
-            " NUnit",
-            " --AssemlbyDirectory",
-            "D:\\Views\\Testing\\Testing\\bin\\Debug",
+            nunitConsoleRunner,
+            "--TestFramework",
+            "NUnit",
+            "--AssemlbyDirectory",
+            testAssemblyPath,
             "--OutputDirectory",
-            " D:\\DevopsTestResults"
+            outputDirecttDirectory.FullName
+        };
+
+        private static string[] inValidArguments = {
+            "--Executor",
+            nunitConsoleRunner,
+            "--TestFramework",
+            "NUnit",
+            "--AssemlbyDirectory",
+            testAssemblyPath,
+            "--OutputDirectory",
+            outputDirecttDirectory.FullName
         };
 
         [SetUp]
-        public void TestSetup()
-        {
+        public void TestSetup() {
             Console.WriteLine("TestSetup goes here");
-            Console.WriteLine(InputToTest.GetType());
-            Console.WriteLine(InputToTest2.GetType());
+            if (!Directory.Exists(outputDirecttDirectory.FullName)) {
+                Directory.CreateDirectory(outputDirecttDirectory.FullName);
+            }
             TestingObject = new DevOps.TestRunner.Arguments();
         }
        
-        [Test,TestCaseSource("InputToTest")]
-        public void TestWillResturnTrueIfAlltheInputIsCorrect(string[] input)
-        {
-           
-            bool returnValue = TestingObject.Parse(input);
+        [Test]
+        public void TestThatWithValidArgumentsTheParsePasses() {
+            bool returnValue = TestingObject.Parse(validArguments);
             Assert.AreEqual(true, returnValue, "Expected different input");
         }
 
-        [Test, TestCaseSource("InputToTest2")]
-        public void TestWillResturnFalseIfAnyOftheInputIsWrong(string[] input)
-        {
-
-            bool returnValue = TestingObject.Parse(input);
+        [Test]
+        public void TestThatWithInvalidArgumentsTheParseFails() {
+            bool returnValue = TestingObject.Parse(inValidArguments);
             Assert.AreEqual(true, returnValue, "Expected different input");
+        }
+
+        // For example only
+        [Test, TestCaseSource("testCaseSourceData")]
+        public void SampleTestWhichUsesTestCaseSource(Int32[] inputValues) {
+            Console.WriteLine(string.Join(",", inputValues));
         }
 
         [TearDown]
-        public void TestTearDown()
-        {
+        public void TestTearDown() {
             Console.WriteLine("TestSetup teardown here");
+            if (outputDirecttDirectory.Exists) {
+                Directory.CreateDirectory(outputDirecttDirectory.FullName);
+            }
             TestingObject = null;
         }
-
     }
 }
