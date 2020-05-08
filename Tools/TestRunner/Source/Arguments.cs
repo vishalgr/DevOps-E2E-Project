@@ -20,7 +20,7 @@ namespace DevOps.TestRunner
     /// -- Validates the input arguments
     /// -- Generates Arguments object
     /// </summary>
-    class Arguments {
+    public class Arguments {
         private string testFramework;
         private string executor;
         private DirectoryInfo assemblyDirectory;
@@ -28,6 +28,7 @@ namespace DevOps.TestRunner
         private static readonly string currentAssembly = typeof(Arguments).Assembly.GetName().Name;
         private readonly StringBuilder errorMessage = new StringBuilder();
 
+        
         #region Public methods
         /// <summary>
         /// Parses input arguments and validates the same
