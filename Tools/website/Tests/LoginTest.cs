@@ -81,7 +81,7 @@ namespace Tests
 
         // Helper functions
         private void SendKeysToElement(string webElementId, string textToEnter) {
-            var webElement = driver.FindElement(By.Id("Password"));
+            var webElement = driver.FindElement(By.Id(webElementId));
             Assert.IsNotNull(webElement, "No element found with the id: " + webElement);
             webElement.SendKeys(textToEnter);
         }
