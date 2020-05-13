@@ -18,3 +18,9 @@ C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\CSVConverter\Output\CSVCon
 C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\Output\CSVConverter.exe.config
 C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\Output\CSVConverter.exe
 C:\Users\subra\Desktop\DEVOPS_test\Tools\CSVConverter\Output\CSVConverter.pdb
+C:\Users\subra\Desktop\SUBBU_PATCH_2\DEVOPS_test\Tools\CSVConverter\Output\CSVConverter.exe.config
+C:\Users\subra\Desktop\SUBBU_PATCH_2\DEVOPS_test\Tools\CSVConverter\Output\CSVConverter.exe
+C:\Users\subra\Desktop\SUBBU_PATCH_2\DEVOPS_test\Tools\CSVConverter\Output\CSVConverter.pdb
+C:\Users\subra\Desktop\SUBBU_PATCH_2\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.csproj.CoreCompileInputs.cache
+C:\Users\subra\Desktop\SUBBU_PATCH_2\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.exe
+C:\Users\subra\Desktop\SUBBU_PATCH_2\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.pdb
