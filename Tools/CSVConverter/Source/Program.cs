@@ -9,8 +9,9 @@ using System.IO.Pipes;
 using System.Xml;
 using System.Runtime.Remoting.Messaging;
 
-namespace CSVConverter {
-    class Program {
+namespace DevOps.CSVConverter
+{
+    public class Program {
         static int Main(string[] args) {
 
             var arguments = new Arguments();
@@ -25,19 +26,28 @@ namespace CSVConverter {
             {
                 var testCases = new TestCases();
                 var xmlList = testCases.FindXMLFiles(arguments.XmlFileDirectory);
-                foreach (var xmlfiles in xmlList)
+                if (xmlList.Count > 0)
                 {
-                    testCases.ParseResultFile(xmlfiles);
-                    FileInfo outputFile = new FileInfo(arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
-                    if (!outputFile.Directory.Exists)
+                    foreach (var xmlfiles in xmlList)
                     {
-                        Directory.CreateDirectory(outputFile.DirectoryName);
+                        testCases.ParseResultFile(xmlfiles);
+                        FileInfo outputFile = new FileInfo(arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
+                        if (!outputFile.Directory.Exists)
+                        {
+                            Directory.CreateDirectory(outputFile.DirectoryName);
+                        }
+                        testCases.WriteIntoCsv(outputFile.FullName);
+
                     }
-                    testCases.WriteIntoCsv(outputFile.FullName);
-                    
+                    Console.WriteLine("The CSV FILE IS STORED IN     " + arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
+                    return 1;
                 }
-                Console.WriteLine("The CSV FILE IS STORED IN     " + arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
-                return 1;
+                else
+                {
+                    Console.WriteLine("Couldnt Find The XML Files,Please Give The Correct Directory");
+                    
+                    return -1;
+                }
                
             }
             catch(Exception e)

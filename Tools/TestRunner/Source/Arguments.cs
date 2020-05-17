@@ -50,7 +50,7 @@ namespace DevOps.TestRunner
                     case "--TESTFRAMEWORK":
                         testFramework = commandLinArgs[++i].Trim();
                         break;
-                    case "--ASSEMLBYDIRECTORY":
+                    case "--ASSEMBLYDIRECTORY":
                         assemblyDirectory = new DirectoryInfo(commandLinArgs[++i].Trim());
                         break;
                     case "--OUTPUTDIRECTORY":
@@ -75,14 +75,14 @@ namespace DevOps.TestRunner
                 var help = new StringBuilder("Usage information:");
                 help.AppendLine(
                     currentAssembly +
-                    " --Executor <Executor path> --TestFramework <test framework> --AssemlbyDirectory <directory path> --OutputDirectory <directory path>"
+                    " --Executor <Executor path> --TestFramework <test framework> --AssemblyDirectory <directory path> --OutputDirectory <directory path>"
                 );
                 help.AppendLine("TestFramework: Name of the test framework. Ex: " + string.Join(", ", Enum.GetNames(typeof(TestFrameWork))));
-                help.AppendLine("AssemlbyDirectory: Directory where test assemblies are located");
+                help.AppendLine("AssemblyDirectory: Directory where test assemblies are located");
                 help.AppendLine("OutputDirectory: Directory where test results to be geneareated at");
                 help.AppendLine(
                     "Example: " + currentAssembly +
-                    @" --Executor D:\Output\Work\Binaries\NunitConsoleRunner\nunit3-console.exe --TestFramework NUnit --AssemlbyDirectory C:\Tests --OutputDirectory C:\TestResults"
+                    @" --Executor D:\Output\Work\Binaries\NunitConsoleRunner\nunit3-console.exe --TestFramework NUnit --AssemblyDirectory C:\Tests --OutputDirectory C:\TestResults"
                 );
                 return help.ToString();
             }

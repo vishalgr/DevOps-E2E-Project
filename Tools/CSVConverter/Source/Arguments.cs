@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSVConverter
+namespace DevOps.CSVConverter
 {
    
-    class Arguments
+   public class Arguments
     {
         private DirectoryInfo xmlfileDirectory;
         private DirectoryInfo outPutDirectory;
