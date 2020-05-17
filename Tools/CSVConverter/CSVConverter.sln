@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29926.136
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVConverter", "CSVConverter\CSVConverter.csproj", "{ABE12F63-5057-41FB-8677-3E4577849B77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVConverter", "Source\CSVConverter.csproj", "{ABE12F63-5057-41FB-8677-3E4577849B77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVConverterTests", "Test\CSVConverterTests.csproj", "{E6907C50-2499-4DA7-BEB7-F03B78B69033}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ABE12F63-5057-41FB-8677-3E4577849B77} = {ABE12F63-5057-41FB-8677-3E4577849B77}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{ABE12F63-5057-41FB-8677-3E4577849B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABE12F63-5057-41FB-8677-3E4577849B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABE12F63-5057-41FB-8677-3E4577849B77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6907C50-2499-4DA7-BEB7-F03B78B69033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6907C50-2499-4DA7-BEB7-F03B78B69033}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6907C50-2499-4DA7-BEB7-F03B78B69033}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6907C50-2499-4DA7-BEB7-F03B78B69033}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

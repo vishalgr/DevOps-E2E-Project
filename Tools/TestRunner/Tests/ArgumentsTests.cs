@@ -38,8 +38,6 @@ namespace DevOps.Tests.TestRunner {
             new Int32[] { 12, 4, 3 }
         };
 
-        // TODO: Below value to extracted dynamically
-        // "D:\\Views\\Testing\\Testing\\bin\\Debug"
         private static string[] validArguments = {
             "--Executor",
             nunitConsoleRunner,
