@@ -12,39 +12,39 @@ namespace DevOps.Tests.CSVConverter
     [TestFixture]
     public class ArgumentsTest
     {
-        //private static string xmlPath = System.Reflection.Assembly.GetAssembly(typeof(DevOps.Tests.CSVConverter.ArgumentsTest)).Location;
-        //private static string xmlDirectory = Path.GetDirectoryName(xmlPath);
+        private static string xmlPath = System.Reflection.Assembly.GetAssembly(typeof(DevOps.Tests.CSVConverter.ArgumentsTest)).Location;
+        private static string xmlDirectory = Path.GetDirectoryName(xmlPath);
 
-        //private static string xmlfilepath = Path.GetFullPath(
-        //       Path.Combine(xmlDirectory, @"..\..\..\Examples\HelloWorld\Output\Bin\")
-        //   );
-        //private static DirectoryInfo outputDirecttDirectory = new DirectoryInfo(Path.Combine(assemblyDirectory, "Work"));
+        private static string xmlfilepath = Path.GetFullPath(
+             Path.Combine(xmlDirectory, @"..\..\..\Examples\HelloWorld\Output\Bin\")
+          );
+        private static DirectoryInfo outputDirectory = new DirectoryInfo(Path.Combine(xmlDirectory, "Work"));
 
         public DevOps.CSVConverter.Arguments TestObject;
 
-        private static string xmlDirectory = @"D:\resultxmls";
-        private static string outputDirectory = @"D:\resultxmls";
+        //private static string xmlDirectory = @"D:\resultxmls";
+        //private static string outputDirectory = @"D:\resultxmls";
 
         private static string[] validArguments = {
             "--xmlFileDirectory",
             xmlDirectory,
             "--OutputDirectory",
-            outputDirectory
+            outputDirectory.FullName
     };
         private static string[] inValidArguments = {
             "--xmlDirectory",
             xmlDirectory,
             "--OutputDirectory",
-            outputDirectory
+            outputDirectory.FullName
     };
 
         [SetUp]
         public void TestSetup()
         {
             Console.WriteLine("TestSetup goes here");
-            if (!Directory.Exists(outputDirectory))
+            if (!Directory.Exists(outputDirectory.FullName))
             {
-                Directory.CreateDirectory(outputDirectory);
+                Directory.CreateDirectory(outputDirectory.FullName);
             }
             TestObject = new DevOps.CSVConverter.Arguments();
         }
@@ -66,9 +66,9 @@ namespace DevOps.Tests.CSVConverter
         public void TestTearDown()
         {
             Console.WriteLine("TestSetup teardown here");
-            if (!Directory.Exists(outputDirectory))
+            if (!Directory.Exists(outputDirectory.FullName))
             {
-                Directory.CreateDirectory(outputDirectory);
+                Directory.CreateDirectory(outputDirectory.FullName);
             }
             TestObject = null;
         }
@@ -76,3 +76,4 @@ namespace DevOps.Tests.CSVConverter
 
     }
 }
+ 
