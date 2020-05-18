@@ -35,12 +35,12 @@ namespace Tests
         {
             var userName = "admin";
             var passWord = "admin";
-            new System.Threading.ManualResetEvent(false).WaitOne(1000);
+           
             Assert.AreSame("admin", userName, "Invalid username");
             Assert.AreSame("admin", passWord, "Invalid password");
             SendKeysToElement("Username", userName);
             SendKeysToElement("Password", passWord);
-            new System.Threading.ManualResetEvent(false).WaitOne(100);
+            
             driver.FindElement(By.Id("btnLogin")).Click();
             driver.Navigate().Forward();
             
@@ -60,13 +60,13 @@ namespace Tests
 
             SendKeysToElement("Username", userName);
             SendKeysToElement("Password", passWord);
-            new System.Threading.ManualResetEvent(false).WaitOne(100);
+            
             driver.FindElement(By.Id("btnLogin")).Click();
 
             Console.WriteLine("wrong credentials");
-            new System.Threading.ManualResetEvent(false).WaitOne(100);
+            
             driver.Navigate().Back();
-            new System.Threading.ManualResetEvent(false).WaitOne(1000);
+            
             driver.Navigate().GoToUrl(url);
         }
 
