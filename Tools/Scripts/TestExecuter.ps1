@@ -1,53 +1,51 @@
 ﻿[CmdletBinding()]
 
 Param (
-
-# Executor to execute the tests
-
+    # Executor to execute the tests
     [Parameter(Mandatory=$true)]
+    $Executor,
 
-$Executor,
-
-# Add some description here
-
+    # Add some description here
     [Parameter(Mandatory=$true)]
+    $TestFramework,
 
-$TestFramework,
-
-# Add some description here
-
+    # Add some description here
     [Parameter(Mandatory=$true)]
+    $AssemblyDirectory,
 
-$AssemblyDirectory,
-
-# Add some description here
-
+    # Add some description here
     [Parameter(Mandatory=$true)]
-
-$OutputDirectory
-
+    $OutputDirectory
 )
 
-$MyDir = Get-Location
+<# TODO: 
+
+    1. Start-Transcript
+    2. Help basecd text
+#>
+
+
+# TODO: Casing and indentaiton
+$scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
+
+Write-Host "scriptPath: $scriptPath"
 
 # Variables
-    $ReturnVal = -1
-    $Count = 1
-    $testRunnerExe = Join-Path -Path "$MyDir" -ChildPath "\TestRunner\Output\DevOps.TestRunner.exe"
-    $csvConverterExe = Join-Path -Path "$MyDir" -ChildPath "\CSVConverter\Output\DevOps.CSVConverter.exe"
+$ReturnVal = -1
+$Count = 1
+$testRunnerExe = Join-Path -Path "$scriptPath" -ChildPath "..\TestRunner\Output\DevOps.TestRunner.exe"
+$csvConverterExe = Join-Path -Path "$scriptPath" -ChildPath "..\CSVConverter\Output\DevOps.CSVConverter.exe"
+#$csvConverterExe = Join-Path -Path "$scriptPath" -ChildPath "..\CSVConverter\Output\CSVConverter.exe"
+
 
 # Functions
+# TODO: Correct all indentations
+Function Log($message) {
+    Write-Host ($(get-date -Format "yyyymmdd-HHMMss: ") + "$message")
+}
 
-    Function Log($message) 
-
-    {
-
-        Write-Host ($(get-date -Format "yyyymmdd-HHMMss: ") + "$message")
-
-    }
-
-    function toolcall($program,$PassedArguments)
-     {
+# Runs executable and returns exit code.
+function RunExecutable($program, $PassedArguments) {
     
         $ProcessInfo= New-Object System.Diagnostics.ProcessStartInfo
         $ProcessInfo.FileName = $program
@@ -64,85 +62,54 @@ $MyDir = Get-Location
         Write-Host "stdout: $stdout"
         Write-Host "stderr: $stderr"
         Write-Host "exit code: " + $ProcessObj.ExitCode
-        
-        return $ProcessObj.ExitCode 
+        $exitCode = $ProcessObj.ExitCode        
+        return $exitCode
     }
 
-    try 
+try {
+    Log "Script execution started"
 
-    {
-
-        Log "Script execution started"
-
-        # Check pre-requisites
-
-            If(-Not $testRunnerExe )
-         
-            {
-            
-                throw "Test runner does not exists: $testRunnerExe"
-            }
-
-            If(-Not $csvConverterExe ) 
-
-            {
-
-               throw "CSV converter does not exists: $csvConverterExe"
-            }
-
-        # Execute
-
-        # TODO: Invoke below within a process and check the exit code.
-
-        # Invoke TestRunner
-
-        $testRunnerArguments = @()
-
-        $testRunnerArguments +="--Executor `"$Executor`" "
-
-        $testRunnerArguments +="--TestFramework `"$TestFramework`" "
-
-        $testRunnerArguments +="--AssemblyDirectory `"$AssemblyDirectory`" "
-
-        $testRunnerArguments +="--OutputDirectory `"$OutputDirectory`" "
-
-        #&$testRunnerExe $testRunnerArguments
-        $ReturnVal=toolcall -program "$testRunnerExe" -PassedArguments "$testRunnerArguments" 
-
-
-
-        if($ReturnVal -eq 0)
-        {
-        toolcall -program "$csvConverterExe" -PassedArguments "$CSVConverterArguments" 
-        }
-
-        #CSVarguments
-
-        $CSVConverterArguments = @()
-
-        $CSVConverterArguments += "--XmlFileDirectory `"$OutputDirectory`" "
-
-        $CSVConverterArguments += "--OutputDirectory `"$OutputDirectory`" "
-        
-        
-        
-
-        Log "Script execution completed successfully"
-
+    # Check pre-requisites
+    If(-Not (Test-Path $testRunnerExe) ) {
+        throw "Test runner does not exists: $testRunnerExe"
     } 
-
-    catch 
-
-    {
-
-        Log "Script execution failed"
-
-        Write-Host "$_" -BackgroundColor Red
-
+    If(-Not (Test-Path $csvConverterExe) ) {
+        throw "CSV converter does not exists: $csvConverterExe"
     }
 
-    finally 
-    {
+    # Execute
 
+    # TODO: Invoke below within a process and check the exit code.
+
+    # Construct TestRunner arguments
+    $testRunnerArguments = @()
+    $testRunnerArguments +="--Executor `"$Executor`" "
+    $testRunnerArguments +="--TestFramework `"$TestFramework`" "
+    $testRunnerArguments +="--AssemlbyDirectory `"$AssemblyDirectory`" "
+    $testRunnerArguments +="--OutputDirectory `"$OutputDirectory`" "
+
+    #&$testRunnerExe $testRunnerArguments
+    $ReturnVal = RunExecutable -program "$testRunnerExe" -PassedArguments "$testRunnerArguments" 
+
+    if($ReturnVal -ne 0) {
+        throw "Test runner execution failed"
+    }
+
+    # Invoke CSVConverter
+    RunExecutable -program "$csvConverterExe" -PassedArguments "$CSVConverterArguments" 
+
+    # Construct CSVConverter arguments
+    $CSVConverterArguments = @()
+    $CSVConverterArguments += "--XmlFileDirectory `"$OutputDirectory`" "
+    $CSVConverterArguments += "--OutputDirectory `"$OutputDirectory`" "
+
+    Log "Script execution completed successfully"
+    ReturnVal = 0
+} catch {
+    Log "Script execution failed"
+    Write-Host "$_" -BackgroundColor Red
+    ReturnVal = -1
+} finally {
      # Reserved place to perform cleanup activities.
-    }
+     exit ReturnVal
+}
