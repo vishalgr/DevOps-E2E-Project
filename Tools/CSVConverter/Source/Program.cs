@@ -13,48 +13,37 @@ namespace DevOps.CSVConverter
 {
     public class Program {
         static int Main(string[] args) {
-
             var arguments = new Arguments();
-            if (! arguments.Parse(args))
-            {
+            if (! arguments.Parse(args)) {
                 Console.WriteLine("Parsing input arguments failed: " +arguments.ErrorMessage );
                 Console.WriteLine(Arguments.Usage);
                 return -1;
                 //throw new  Exception("Test runner execution failed");
             }
-            try
-            {
+            try {
                 var testCases = new TestCases();
                 var xmlList = testCases.FindXMLFiles(arguments.XmlFileDirectory);
-                if (xmlList.Count > 0)
-                {
-                    foreach (var xmlfiles in xmlList)
-                    {
+                if (xmlList.Count > 0) {
+                    foreach (var xmlfiles in xmlList) {
                         testCases.ParseResultFile(xmlfiles);
                         FileInfo outputFile = new FileInfo(arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
-                        if (!outputFile.Directory.Exists)
-                        {
+                        if (!outputFile.Directory.Exists) {
                             Directory.CreateDirectory(outputFile.DirectoryName);
                         }
                         testCases.WriteIntoCsv(outputFile.FullName);
 
                     }
-                    Console.WriteLine("The CSV FILE IS STORED IN     " + arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
+                    Console.WriteLine("The CSV file is stored at: " + arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
                     return 1;
                 }
-                else
-                {
+                else {
                     Console.WriteLine("Couldnt Find The XML Files,Please Give The Correct Directory");
-                    
                     return -1;
                 }
-               
             }
-            catch(Exception e)
-            {
+            catch(Exception e) {
                 Console.WriteLine(e.Message);
                 return -1;
-
             }
         }
     }

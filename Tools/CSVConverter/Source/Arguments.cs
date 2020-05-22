@@ -67,8 +67,6 @@ namespace DevOps.CSVConverter
         }
         #endregion
 
-
-
         #region Public arguments
         public DirectoryInfo XmlFileDirectory
         {
@@ -92,7 +90,6 @@ namespace DevOps.CSVConverter
         }
 
         #endregion
-
 
         #region Private methods
         private bool Validate()
