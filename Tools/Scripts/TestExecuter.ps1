@@ -31,7 +31,7 @@ $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 Write-Host "scriptPath: $scriptPath"
 
 # Variables
-$ReturnVal = -1
+$scriptExecutionStatus = -1
 $Count = 1
 $testRunnerExe = Join-Path -Path "$scriptPath" -ChildPath "..\TestRunner\Output\DevOps.TestRunner.exe"
 $csvConverterExe = Join-Path -Path "$scriptPath" -ChildPath "..\CSVConverter\Output\DevOps.CSVConverter.exe"
@@ -45,26 +45,59 @@ Function Log($message) {
 }
 
 # Runs executable and returns exit code.
-function RunExecutable($program, $PassedArguments) {
-    
-        $ProcessInfo= New-Object System.Diagnostics.ProcessStartInfo
-        $ProcessInfo.FileName = $program
-        $ProcessInfo.RedirectStandardError = $true
-        $ProcessInfo.RedirectStandardOutput = $true
-        $ProcessInfo.UseShellExecute = $false
-        $ProcessInfo.Arguments = $PassedArguments
-        $ProcessObj = New-Object System.Diagnostics.Process
-        $ProcessObj.StartInfo = $processInfo
-        $ProcessObj.Start() | Out-Null
-        $ProcessObj.WaitForExit()
-        $stdout = $ProcessObj.StandardOutput.ReadToEnd()
+function RunExecutable($executable, $arguments) {
+    Log ("Executing the executable '$executable' with arguments '$arguments'")
+    $ProcessInfo= New-Object System.Diagnostics.ProcessStartInfo
+    $ProcessInfo.FileName = $executable
+    $ProcessInfo.RedirectStandardError = $true
+    $ProcessInfo.RedirectStandardOutput = $true
+    $ProcessInfo.UseShellExecute = $false
+    $ProcessInfo.Arguments = $arguments
+
+    $ProcessObj = New-Object System.Diagnostics.Process
+    $ProcessObj.StartInfo = $processInfo
+    $ProcessObj.Start() | Out-Null
+    $ProcessObj.WaitForExit()
+    $stdout = $ProcessObj.StandardOutput.ReadToEnd()    
+    $exitCode = $ProcessObj.ExitCode
+    Log("exit code: " + $exitCode)
+    Log("StandardOutput: $stdout")
+
+    # Check for execution status
+    if($exitCode -ne 0) {
         $stderr = $ProcessObj.StandardError.ReadToEnd()
-        Write-Host "stdout: $stdout"
-        Write-Host "stderr: $stderr"
-        Write-Host "exit code: " + $ProcessObj.ExitCode
-        $exitCode = $ProcessObj.ExitCode        
-        return $exitCode
+        Log("StandardError: $stderr")
     }
+    return $exitCode
+}
+
+Function RunTestRunner() {
+   # Construct TestRunner arguments
+    $testRunnerArguments = @()
+    $testRunnerArguments +="--Executor `"$Executor`" "
+    $testRunnerArguments +="--TestFramework `"$TestFramework`" "
+    $testRunnerArguments +="--AssemblyDirectory `"$AssemblyDirectory`" "
+    $testRunnerArguments +="--OutputDirectory `"$OutputDirectory`" "
+    
+    $returnVal = RunExecutable $testRunnerExe $testRunnerArguments
+
+    if($returnVal -ne 0) {
+        throw "Test runner execution failed"
+    }
+}
+
+Function RunCsvConverterExe() {
+     # Construct CSVConverter arguments
+    $CSVConverterArguments = @()
+    $CSVConverterArguments += "--XmlFileDirectory `"$OutputDirectory`" "
+    $CSVConverterArguments += "--OutputDirectory `"$OutputDirectory`" "
+
+    # Invoke CSVConverter
+    $returnVal = RunExecutable $csvConverterExe $CSVConverterArguments
+    if($returnVal -ne 0) {
+        throw "csvConverterExe execution failed"
+    }
+}
 
 try {
     Log "Script execution started"
@@ -77,39 +110,19 @@ try {
         throw "CSV converter does not exists: $csvConverterExe"
     }
 
-    # Execute
-
-    # TODO: Invoke below within a process and check the exit code.
-
-    # Construct TestRunner arguments
-    $testRunnerArguments = @()
-    $testRunnerArguments +="--Executor `"$Executor`" "
-    $testRunnerArguments +="--TestFramework `"$TestFramework`" "
-    $testRunnerArguments +="--AssemlbyDirectory `"$AssemblyDirectory`" "
-    $testRunnerArguments +="--OutputDirectory `"$OutputDirectory`" "
-
-    #&$testRunnerExe $testRunnerArguments
-    $ReturnVal = RunExecutable -program "$testRunnerExe" -PassedArguments "$testRunnerArguments" 
-
-    if($ReturnVal -ne 0) {
-        throw "Test runner execution failed"
-    }
-
-    # Invoke CSVConverter
-    RunExecutable -program "$csvConverterExe" -PassedArguments "$CSVConverterArguments" 
-
-    # Construct CSVConverter arguments
-    $CSVConverterArguments = @()
-    $CSVConverterArguments += "--XmlFileDirectory `"$OutputDirectory`" "
-    $CSVConverterArguments += "--OutputDirectory `"$OutputDirectory`" "
+    RunTestRunner
+    RunCsvConverterExe
 
     Log "Script execution completed successfully"
-    ReturnVal = 0
+    $scriptExecutionStatus = 0
 } catch {
     Log "Script execution failed"
-    Write-Host "$_" -BackgroundColor Red
-    ReturnVal = -1
+    # TODO: Fix below object usage
+    <#Log($Error[0].Exception)
+    Log($Error[0].ScriptStackTrace    )
+    #>
+    $scriptExecutionStatus = -1
 } finally {
      # Reserved place to perform cleanup activities.
-     exit ReturnVal
+     exit $scriptExecutionStatus
 }
