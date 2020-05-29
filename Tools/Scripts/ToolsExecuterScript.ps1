@@ -23,128 +23,113 @@ Param (
     [Parameter(Mandatory=$true)]
     $Executor,
 
-    # Name of the test framework
+    # Add some description here
     [Parameter(Mandatory=$true)]
     $TestFramework,
 
-    # assembly directory where the test assemblies are present
+    # Add some description here
     [Parameter(Mandatory=$true)]
     $AssemblyDirectory,
 
-    # The output 
+    # Add some description here
     [Parameter(Mandatory=$true)]
     $OutputDirectory
 )
 
-<# TODO: 
-
-    1. Start-Transcript
-    2. Help basecd text
-#>
-
-
-# TODO: Casing and indentaiton
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 
 Write-Host "scriptPath: $scriptPath"
 
 # Variables
-$returnVal=-1
 $scriptExecutionStatus = -1
+$Count = 1
 $testRunnerExe = Join-Path -Path "$scriptPath" -ChildPath "..\TestRunner\Output\DevOps.TestRunner.exe"
 $csvConverterExe = Join-Path -Path "$scriptPath" -ChildPath "..\CSVConverter\Output\DevOps.CSVConverter.exe"
-#$csvConverterExe = Join-Path -Path "$scriptPath" -ChildPath "..\CSVConverter\Output\CSVConverter.exe"
 
 
-# Functions
-# TODO: Correct all indentations
 Function Log($message) {
     Write-Host ($(get-date -Format "yyyymmdd-HHMMss: ") + "$message")
 }
 
 # Runs executable and returns exit code.
 function RunExecutable($executable, $arguments) {
-    Log ("Executing the executable '$executable' with arguments '$arguments'")
-    $ProcessInfo= New-Object System.Diagnostics.ProcessStartInfo
-    $ProcessInfo.FileName = $executable
-    $ProcessInfo.RedirectStandardError = $true
-    $ProcessInfo.RedirectStandardOutput = $true
-    $ProcessInfo.UseShellExecute = $false
-    $ProcessInfo.Arguments = $arguments
+Log ("Executing the executable '$executable' with arguments '$arguments'")
+$processInfo= New-Object System.Diagnostics.ProcessStartInfo
+$processInfo.FileName = $executable
+$processInfo.RedirectStandardError = $true
+$processInfo.RedirectStandardOutput = $true
+$processInfo.UseShellExecute = $false
+$processInfo.Arguments = $arguments
 
-    $ProcessObj = New-Object System.Diagnostics.Process
-    $ProcessObj.StartInfo = $processInfo
-    $ProcessObj.Start() | Out-Null
-    $ProcessObj.WaitForExit()
-    $stdout = $ProcessObj.StandardOutput.ReadToEnd()    
-    $returnVal = $ProcessObj.ExitCode
-    $ProcessObj.Close();
-    Log("exit code: " + $returnVal)
-    Log("StandardOutput: $stdout")
-
-    # Check for execution status
-    if($returnVal -ne 0) {
-        $stderr = $ProcessObj.StandardError.ReadToEnd()
-        Log("StandardError: $stderr")
+$processObj = New-Object System.Diagnostics.Process
+$processObj.StartInfo = $processInfo
+$processObj.Start() | Out-Null
+$processObj.WaitForExit()
+$stdout = $processObj.StandardOutput.ReadToEnd()    
+$exitCode = $processObj.ExitCode
+Log("exit code: " + $exitCode)
+Log("StandardOutput: $stdout")
+  # Check for execution status
+if($exitCode -ne 0) {
+$stderr = $processObj.StandardError.ReadToEnd()
+Log("StandardError: $stderr")
     }
-    return $returnVal
+    return $exitCode
 }
 
 Function RunTestRunner() {
-   # Construct TestRunner arguments
-    $testRunnerArguments = @()
-    $testRunnerArguments +="--Executor `"$Executor`" "
-    $testRunnerArguments +="--TestFramework `"$TestFramework`" "
-    $testRunnerArguments +="--AssemblyDirectory `"$AssemblyDirectory`" "
-    $testRunnerArguments +="--OutputDirectory `"$OutputDirectory`" "
-    
-    $returnVal = RunExecutable -executable $testRunnerExe -arguments $testRunnerArguments                  
-
-    if($returnVal -ne 0) {
-        throw "Test runner execution failed"
+# Construct TestRunner arguments
+$testRunnerArguments = @()
+$testRunnerArguments +="--Executor `"$Executor`" "
+$testRunnerArguments +="--TestFramework `"$TestFramework`" "
+$testRunnerArguments +="--AssemblyDirectory `"$AssemblyDirectory`" "
+$testRunnerArguments +="--OutputDirectory `"$OutputDirectory`" "
+$returnVal = RunExecutable $testRunnerExe $testRunnerArguments
+if($returnVal -ne 0) {
+    throw "Test runner execution failed"
     }
 }
 
 Function RunCsvConverterExe() {
-     # Construct CSVConverter arguments
-    $CSVConverterArguments = @()
-    $CSVConverterArguments += "--XmlFileDirectory `"$OutputDirectory`" "
-    $CSVConverterArguments += "--OutputDirectory `"$OutputDirectory`" "
-
-    # Invoke CSVConverter
-    $returnVal = RunExecutable -executable $csvConverterExe -arguments $CSVConverterArguments
-    if($returnVal -ne 0) {
-        throw "csvConverterExe execution failed"
+# Construct CSVConverter arguments
+$CSVConverterArguments = @()
+$CSVConverterArguments += "--XmlFileDirectory `"$OutputDirectory`" "
+$CSVConverterArguments += "--OutputDirectory `"$OutputDirectory`" "
+# Invoke CSVConverter
+$returnVal = RunExecutable $csvConverterExe $CSVConverterArguments
+if($returnVal -ne 0) {
+    throw "csvConverterExe execution failed"
     }
 }
-#start of the transcript
-Start-Transcript -Path "$OutputDirectory\transcript.txt" -Append 
+
 try {
-    Log "Script execution started"
+#start of the transcript
+Start-Transcript -Path "$OutputDirectory\Transcript.txt" -Append
+Log "Script execution started"
 
-    # Check pre-requisites
-    If(-Not (Test-Path $testRunnerExe) ) {
-        throw "Test runner does not exists: $testRunnerExe"
-    } 
-    If(-Not (Test-Path $csvConverterExe) ) {
-        throw "CSV converter does not exists: $csvConverterExe"
-    }
-
-    RunTestRunner
-    RunCsvConverterExe
-
-    Log "Script execution completed successfully"
-    $scriptExecutionStatus = 0
-} catch {
-    Log "Script execution failed"
-    Log($Error[0].Exception.Message)
-    Log($Error[0].ScriptStackTrace)
-    Log($Error[0].Exception.StackTrace)
-
-    $scriptExecutionStatus = -1
-} finally {
-     # Reserved place to perform cleanup activities.
-     exit $scriptExecutionStatus
+# Check pre-requisites
+If(-Not (Test-Path $testRunnerExe) ) {
+  throw "Test runner does not exists: $testRunnerExe"
+} 
+If(-Not (Test-Path $csvConverterExe) ) {
+  throw "CSV converter does not exists: $csvConverterExe"
 }
-#End of the transcript
+RunTestRunner
+RunCsvConverterExe
+Log "Script execution completed successfully"
+$scriptExecutionStatus = 0
 Stop-Transcript
+}
+
+catch {
+Start-Transcript -Path "$OutputDirectory\Transcripterror.txt" -Append
+Log "Script execution failed"
+Log($Error[0].Exception.Message)
+Log($Error[0].ScriptStackTrace)
+Log($Error[0].Exception.StackTrace)
+$scriptExecutionStatus = -1
+Stop-Transcript
+} finally {
+# Reserved place to perform cleanup activities.
+exit $scriptExecutionStatus
+}
