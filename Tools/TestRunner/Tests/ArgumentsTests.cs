@@ -78,7 +78,7 @@ namespace DevOps.Tests.TestRunner {
         [Test]
         public void TestThatWithInvalidArgumentsTheParseFails() {
             bool returnValue = TestingObject.Parse(inValidArguments);
-            Assert.AreEqual(true, returnValue, "Expected different input");
+            Assert.AreEqual(false, returnValue, "Expected different input");
         }
 
         // For example only

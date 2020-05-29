@@ -12,39 +12,57 @@ using System.Runtime.Remoting.Messaging;
 namespace DevOps.CSVConverter
 {
     public class Program {
-        static int Main(string[] args) {
-            var arguments = new Arguments();
-            if (! arguments.Parse(args)) {
-                Console.WriteLine("Parsing input arguments failed: " +arguments.ErrorMessage );
-                Console.WriteLine(Arguments.Usage);
-                return -1;
-                //throw new  Exception("Test runner execution failed");
-            }
-            try {
-                var testCases = new TestCases();
-                var xmlList = testCases.FindXMLFiles(arguments.XmlFileDirectory);
-                if (xmlList.Count > 0) {
-                    foreach (var xmlfiles in xmlList) {
-                        testCases.ParseResultFile(xmlfiles);
-                        FileInfo outputFile = new FileInfo(arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
-                        if (!outputFile.Directory.Exists) {
-                            Directory.CreateDirectory(outputFile.DirectoryName);
-                        }
-                        testCases.WriteIntoCsv(outputFile.FullName);
-
-                    }
-                    Console.WriteLine("The CSV file is stored at: " + arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
-                    return 1;
+        public static int Main(string[] args) {
+                var arguments = new Arguments();
+                if (!arguments.Parse(args)) {
+                    Console.WriteLine("Parsing input arguments failed: " + arguments.ErrorMessage);
+                    Console.WriteLine(Arguments.Usage);
+                    return -1;
+                    //throw new  Exception("Test runner execution failed");
                 }
-                else {
-                    Console.WriteLine("Couldnt Find The XML Files,Please Give The Correct Directory");
+                try {
+                    var testCases = new TestCases();
+                    var xmlList = testCases.FindXMLFiles(arguments.XmlFileDirectory);
+                    if (xmlList.Count > 0) {
+                        foreach (var xmlfiles in xmlList) {
+                            testCases.ParseResultFile(xmlfiles);
+                            FileInfo outputFile = new FileInfo(arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
+                            if (!outputFile.Directory.Exists) {
+                                Directory.CreateDirectory(outputFile.DirectoryName);
+                            }
+                            testCases.WriteIntoCsv(outputFile.FullName);
+
+                        }
+                    int retVal =CheckOutputGenerated(arguments.OutputDirectory.FullName + "\\ConsolidatedResults.csv");
+                    if (retVal == 0)
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        return 1;
+                    }
+                    }
+                    else {
+                        Console.WriteLine("Couldnt Find The XML Files,Please Give The Correct Directory");
+                        return -1;
+                    }
+                }
+                catch (Exception e) {
+                    Console.WriteLine(e.Message);
                     return -1;
                 }
+          
+        }
+
+        public static int CheckOutputGenerated(string file)
+        {
+            if (File.Exists(@file))
+            {
+                Console.WriteLine("The CSV file is stored at: " + file); 
+                return 0;
             }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
-                return -1;
-            }
+            return -1;
         }
     }
     enum TestStatus {
@@ -123,7 +141,8 @@ namespace DevOps.CSVConverter
         }
 
         public void WriteIntoCsv(string filePath) {
-            StreamWriter csvFileWriter = new StreamWriter(filePath);
+           StreamWriter csvFileWriter = new StreamWriter(filePath);
+            //StreamWriter csvFileWriter = File.AppendText(filePath);
             // Write header
             csvFileWriter.WriteLine(csvHeader);
 

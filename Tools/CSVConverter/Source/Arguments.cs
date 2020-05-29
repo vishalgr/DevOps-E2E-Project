@@ -102,7 +102,7 @@ namespace DevOps.CSVConverter
 
             if (!checkDirectory(outPutDirectory))
             {
-                isValidationSuccess = false;
+                Directory.CreateDirectory(outPutDirectory.FullName);
             }
             return isValidationSuccess;
         }

@@ -1,19 +1,37 @@
-﻿[CmdletBinding()]
+﻿<#
+.SYNOPSIS
+  This is a simple powershell script to invoke two process.
+.DESCRIPTION
+   First the powershell script will invoke the testrunner, if the tesrunner is executed successfully then the csvconverter is invoked else the particular error is thrown.
+.PARAMETER Executor
+    The path to the nunit-console.exe.
+.PARAMETER TestFramework
+    Name of the test framework. Ex: NUnit, MSTest
+.PARAMETER AssemblyDirectory
+    Directory where test assemblies are located.EX:The path to the folder where the dll of the test cases are stored.
+.PARAMETER OutputDirectory
+    Directory where test results to be geneareated.EX:The xml and csv files storing location.
+.EXAMPLE
+    C:\PS> 
+    TestExecuter.ps1 -Executor "C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -TestFramework NUnit -AssemblyDirectory D:\github\DEVOPS_test\Tools\LoginApplication\Output -OutputDirectory D:\DEVOPS_test\Tools\files)
+
+#>
+[CmdletBinding()]
 
 Param (
     # Executor to execute the tests
     [Parameter(Mandatory=$true)]
     $Executor,
 
-    # Add some description here
+    # Name of the test framework
     [Parameter(Mandatory=$true)]
     $TestFramework,
 
-    # Add some description here
+    # assembly directory where the test assemblies are present
     [Parameter(Mandatory=$true)]
     $AssemblyDirectory,
 
-    # Add some description here
+    # The output 
     [Parameter(Mandatory=$true)]
     $OutputDirectory
 )
@@ -31,8 +49,8 @@ $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 Write-Host "scriptPath: $scriptPath"
 
 # Variables
+$returnVal=-1
 $scriptExecutionStatus = -1
-$Count = 1
 $testRunnerExe = Join-Path -Path "$scriptPath" -ChildPath "..\TestRunner\Output\DevOps.TestRunner.exe"
 $csvConverterExe = Join-Path -Path "$scriptPath" -ChildPath "..\CSVConverter\Output\DevOps.CSVConverter.exe"
 #$csvConverterExe = Join-Path -Path "$scriptPath" -ChildPath "..\CSVConverter\Output\CSVConverter.exe"
@@ -59,16 +77,17 @@ function RunExecutable($executable, $arguments) {
     $ProcessObj.Start() | Out-Null
     $ProcessObj.WaitForExit()
     $stdout = $ProcessObj.StandardOutput.ReadToEnd()    
-    $exitCode = $ProcessObj.ExitCode
-    Log("exit code: " + $exitCode)
+    $returnVal = $ProcessObj.ExitCode
+    $ProcessObj.Close();
+    Log("exit code: " + $returnVal)
     Log("StandardOutput: $stdout")
 
     # Check for execution status
-    if($exitCode -ne 0) {
+    if($returnVal -ne 0) {
         $stderr = $ProcessObj.StandardError.ReadToEnd()
         Log("StandardError: $stderr")
     }
-    return $exitCode
+    return $returnVal
 }
 
 Function RunTestRunner() {
@@ -79,7 +98,7 @@ Function RunTestRunner() {
     $testRunnerArguments +="--AssemblyDirectory `"$AssemblyDirectory`" "
     $testRunnerArguments +="--OutputDirectory `"$OutputDirectory`" "
     
-    $returnVal = RunExecutable $testRunnerExe $testRunnerArguments
+    $returnVal = RunExecutable -executable $testRunnerExe -arguments $testRunnerArguments                  
 
     if($returnVal -ne 0) {
         throw "Test runner execution failed"
@@ -93,12 +112,13 @@ Function RunCsvConverterExe() {
     $CSVConverterArguments += "--OutputDirectory `"$OutputDirectory`" "
 
     # Invoke CSVConverter
-    $returnVal = RunExecutable $csvConverterExe $CSVConverterArguments
+    $returnVal = RunExecutable -executable $csvConverterExe -arguments $CSVConverterArguments
     if($returnVal -ne 0) {
         throw "csvConverterExe execution failed"
     }
 }
-
+#start of the transcript
+Start-Transcript -Path "$OutputDirectory\transcript.txt" -Append 
 try {
     Log "Script execution started"
 
@@ -117,12 +137,14 @@ try {
     $scriptExecutionStatus = 0
 } catch {
     Log "Script execution failed"
-    # TODO: Fix below object usage
-    <#Log($Error[0].Exception)
-    Log($Error[0].ScriptStackTrace    )
-    #>
+    Log($Error[0].Exception.Message)
+    Log($Error[0].ScriptStackTrace)
+    Log($Error[0].Exception.StackTrace)
+
     $scriptExecutionStatus = -1
 } finally {
      # Reserved place to perform cleanup activities.
      exit $scriptExecutionStatus
 }
+#End of the transcript
+Stop-Transcript

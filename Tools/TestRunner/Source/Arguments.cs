@@ -144,7 +144,7 @@ namespace DevOps.TestRunner
             }
             
             if (!checkDirectory(outPutDirectory)) {
-                isValidationSuccess = false;
+                Directory.CreateDirectory(outPutDirectory.FullName);
             }
 
             if (!File.Exists(executor)) {
@@ -158,7 +158,8 @@ namespace DevOps.TestRunner
         }
 
         private bool checkDirectory(DirectoryInfo directory) {
-            if (!directory.Exists) {
+            if (!directory.Exists)
+            {
                 errorMessage.AppendLine(
                     "The directory does not exists:" + outPutDirectory.FullName
                 );
