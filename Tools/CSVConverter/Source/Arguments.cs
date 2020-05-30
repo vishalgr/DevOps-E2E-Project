@@ -43,7 +43,7 @@ namespace DevOps.CSVConverter
             }
 
             return isParseSuccess && Validate();
-        }
+        }   
         public static string Usage
         {
             get
