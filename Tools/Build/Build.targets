@@ -13,6 +13,8 @@ Build script
   <ItemGroup>
     <Solutions Include="..\TestRunner\TestRunner.sln" />
 	<Solutions Include="..\CSVConverter\CSVConverter.sln" />
+	<Solutions Include="..\LoginApplication\LoginApplication.sln" />
+	
     <!-- <PublishScripts Include="Publish.targets" /> -->
   </ItemGroup>
 </Project>
