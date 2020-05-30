@@ -7,11 +7,14 @@ Build script
   <PropertyGroup>
     <CodebasePath>..\</CodebasePath>
   </PropertyGroup>
-
   <Import Project="..\..\Build\BuildCodebases.targets" />
 
   <ItemGroup>
     <Solutions Include="..\HelloWorld\HelloWorld.sln" />
-    <!-- <PublishScripts Include="Publish.targets" /> -->
+
+    <!-- Contents to be published  -->
+    <PackageContent Include="$(CodebasePath)HelloWorld\Output\Bin\*.*">
+        <PackageName>HelloWorld</PackageName>
+    </PackageContent>
   </ItemGroup>
 </Project>

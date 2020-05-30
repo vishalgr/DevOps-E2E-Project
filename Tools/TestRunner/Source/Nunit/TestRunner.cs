@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +17,6 @@ namespace DevOps.TestRunner.NUnit
         }
 
         int ITestRunner.Execute(string testAssembly, DirectoryInfo outPutDirectory) {
-            // TODO: Implementation is due.
             //string filepath = @"D:\DevopsTestResults\sample.txt";
             string xmlName;
             xmlName = Path.GetFileNameWithoutExtension(testAssembly);
@@ -45,10 +43,9 @@ namespace DevOps.TestRunner.NUnit
         List<string> ITestRunner.FindTestAssemblies(DirectoryInfo searchDirectory) {
             // Test assemble example:DevOps.Tests.TestRunner
             List<string> testAssemblies = new List<string>();
-             foreach (var file in searchDirectory.GetFiles(("DevOps.Tests.*.dll") )) {
-                 testAssemblies.Add(file.FullName);
-             }
-
+            foreach (var file in searchDirectory.GetFiles("DevOps.Tests.*.dll")) {
+                testAssemblies.Add(file.FullName);
+            }
              return testAssemblies;
         }
     }

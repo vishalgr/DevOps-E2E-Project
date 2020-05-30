@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <packageSources>
+        <clear />
+        <add key="github" value="https://nuget.pkg.github.com/vishalgr/index.json" />
+        <add key="NuGet v2" value="https://www.nuget.org/api/v2/" />
+    </packageSources>
+    <packageSourceCredentials>
+        <github>
+            <add key="Username" value="<ENTER YOUR GIT USER NAME HERE. EX: vishalgr>" />
+            <add key="ClearTextPassword" value="<ENTER THE CREDENTIAL PASS KEY TO ACCESS TO THE REGISSTRY. Typically 40char string>" />
+        </github>
+    </packageSourceCredentials>
+</configuration>
