@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site1.master.cs" Inherits="LoginApplication.Site1" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site1.master.cs" Inherits="LoginApplication.Site1" %>
 
 <!DOCTYPE html>
 

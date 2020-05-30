@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using NUnit.Framework;
-namespace Test
+namespace DevOps.Test.LoginApplication
 {
     [TestFixture]
     public class LoginTest
