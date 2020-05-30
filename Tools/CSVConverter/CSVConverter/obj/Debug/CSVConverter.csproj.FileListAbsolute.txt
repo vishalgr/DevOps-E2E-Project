@@ -1,7 +1,0 @@
-D:\DevopsFinalBranchEdit\Branches\branchesBasicPipeline\DEVOPS_test\Tools\CSVConverter\CSVConverter\bin\Debug\CSVConverter.exe.config
-D:\DevopsFinalBranchEdit\Branches\branchesBasicPipeline\DEVOPS_test\Tools\CSVConverter\CSVConverter\bin\Debug\CSVConverter.exe
-D:\DevopsFinalBranchEdit\Branches\branchesBasicPipeline\DEVOPS_test\Tools\CSVConverter\CSVConverter\bin\Debug\CSVConverter.pdb
-D:\DevopsFinalBranchEdit\Branches\branchesBasicPipeline\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.csproj.CoreCompileInputs.cache
-D:\DevopsFinalBranchEdit\Branches\branchesBasicPipeline\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.exe
-D:\DevopsFinalBranchEdit\Branches\branchesBasicPipeline\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.pdb
-D:\DevopsFinalBranchEdit\Branches\branchesBasicPipeline\DEVOPS_test\Tools\CSVConverter\CSVConverter\obj\Debug\CSVConverter.csprojAssemblyReference.cache
