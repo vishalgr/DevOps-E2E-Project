@@ -65,6 +65,13 @@ Rem Error check
 echo CLEAN %CLEAN%
 echo FULL_BUILD %FULL_BUILD%
 echo INCREMENTAL_BUILD %INCREMENTAL_BUILD%
+
+Rem Pre-requisites check
+if not exist "%SCRIPT_DIR%nuget.config" (
+    echo "The file 'nuget.config' is missing at root directory. See 'nuget.config.template' for sample file"
+    goto error
+)
+
 REM TODO:
 REM Build --full --incremental does not cates below error
 if "%INCREMENTAL_BUILD%" EQU "true" if "%FULL_BUILD%" EQU "true" (
@@ -86,9 +93,9 @@ echo commandToExecute: %BUILD_CMD_BASE% /t:Build;Publish
 %BUILD_CMD_BASE% /t:Build;Publish
 if errorlevel 1 goto error
 
-echo Build succeeded
+Powershell Write-host -BackgroundColor Green "Build succeeded"
 goto :eof
 
 :error
-echo Build failed
+Powershell Write-host -BackgroundColor Red "Build failed"
 exit /b 1
