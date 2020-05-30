@@ -31,7 +31,6 @@
       StopOnFirstFailure="$(StopOnFirstFailure)" />
   </Target>
 
-
   <!-- Build all codebases. -->
   <Target Name="Build" >
     <!-- TODO: Clean in reverse order. -->
@@ -40,7 +39,16 @@
       Targets="Build"
       StopOnFirstFailure="$(StopOnFirstFailure)" />
   </Target>
-
+  
+  <!-- Perform Publish alone -->
+  <Target Name="_Publish" >
+    <MSBuild Projects="@(BuildScripts)"
+      Targets="Publish"
+      StopOnFirstFailure="$(StopOnFirstFailure)" />
+  </Target>
+  
+  <!-- Perform Build and Publish alone -->
+  <Target Name="Publish" DependsOnTargets="Build;_Publish" />
   
   <!--Tasks-->
   <!--TODO: Not working, need to check-->

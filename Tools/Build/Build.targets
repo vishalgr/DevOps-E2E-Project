@@ -12,6 +12,13 @@ Build script
 
   <ItemGroup>
     <Solutions Include="..\TestRunner\TestRunner.sln" />
-    <!-- <PublishScripts Include="Publish.targets" /> -->
+      
+      <!-- Contents to be published -->
+    <PackageContent Include="$(CodebasePath)CSVConverter\Output\Bin\*.*">
+      <PackageName>CSVConverter</PackageName>
+    </PackageContent>
+    <PackageContent Include="$(CodebasePath)TestRunner\Output\Bin\*.*">
+      <PackageName>TestRunner</PackageName>
+    </PackageContent>
   </ItemGroup>
 </Project>
