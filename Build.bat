@@ -88,12 +88,10 @@ if "%CLEAN%" EQU "true" (
     if errorlevel 1 goto error
 )
 
-Rem Build
-echo commandToExecute: %BUILD_CMD_BASE% /t:Build
-%BUILD_CMD_BASE% /t:Build
+Rem Build and Publish
+echo commandToExecute: %BUILD_CMD_BASE% /t:Build;Publish
+%BUILD_CMD_BASE% /t:Build;Publish
 if errorlevel 1 goto error
-
-Rem TODO: Publish to be performed
 
 Powershell Write-host -BackgroundColor Green "Build succeeded"
 goto :eof
