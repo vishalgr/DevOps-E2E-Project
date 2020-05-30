@@ -31,7 +31,9 @@ namespace DevOps.Tests.TestRunner {
         //string myString = "DevOps.TestRunner --Executor  D:\\Applications\\nunit-console\\nunit3-console.exe  --TestFramework  NUnit --AssemlbyDirectory D:\\Views\\Testing\\Testing\\bin\\Debug --OutputDirectory  D:\\DevopsTestResults";
         //string[] myString.Cast<char>().Cast<string>().ToArray();
         private DevOps.TestRunner.Arguments TestingObject;
-        private static  DirectoryInfo outputDirecttDirectory = new DirectoryInfo(Path.Combine(assemblyDirectory, "Work"));
+        private static DirectoryInfo outputDirecttDirectory = new DirectoryInfo(
+                Path.Combine(assemblyDirectory, @"..\..\..\Examples\HelloWorld\Output\")
+            );
         static object[] testCaseSourceData = {
             new Int32[] { 12, 3, 4 },
             new Int32[] { 12, 2, 6 },
@@ -43,7 +45,7 @@ namespace DevOps.Tests.TestRunner {
             nunitConsoleRunner,
             "--TestFramework",
             "NUnit",
-            "--AssemlbyDirectory",
+            "--AssemblyDirectory",
             testAssemblyPath,
             "--OutputDirectory",
             outputDirecttDirectory.FullName

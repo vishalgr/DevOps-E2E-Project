@@ -1,5 +1,0 @@
-Name,Status,Duration
-ConsoleApp3.tests.TestConsoleApp3.TestReturnInputShallNotReturnTheInputFail,Failed,0.288907,
-ConsoleApp3.tests.TestConsoleApp3.TestReturnInputShallReturnTheInputPass,Passed,0.001369,
-ConsoleApp3.tests.TestConsoleApp3.TestReturnInputShallReturnTheInputPass("Hello World"),Passed,0.000170,
-ConsoleApp3.tests.TestConsoleApp3.TestReturnInputShallReturnTheInputPass("Test Input"),Passed,0.000039,

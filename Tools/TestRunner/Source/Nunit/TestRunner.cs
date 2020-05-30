@@ -45,7 +45,7 @@ namespace DevOps.TestRunner.NUnit
         List<string> ITestRunner.FindTestAssemblies(DirectoryInfo searchDirectory) {
             // Test assemble example:DevOps.Tests.TestRunner
             List<string> testAssemblies = new List<string>();
-             foreach (var file in searchDirectory.GetFiles(("DevOps.Tests.*.dll") )) {
+             foreach (var file in searchDirectory.GetFiles(("DevOps*.dll") )) {
                  testAssemblies.Add(file.FullName);
              }
 
