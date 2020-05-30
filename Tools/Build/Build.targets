@@ -14,7 +14,8 @@ Build script
     <Solutions Include="..\TestRunner\TestRunner.sln" />
 	  <Solutions Include="..\CSVConverter\CSVConverter.sln" />
 	  <Solutions Include="..\LoginApplication\LoginApplication.sln" />      
-      <!-- Contents to be published -->
+    
+    <!-- Contents to be published -->
     <PackageContent Include="$(CodebasePath)CSVConverter\Output\Bin\*.*">
       <PackageName>CSVConverter</PackageName>
     </PackageContent>
