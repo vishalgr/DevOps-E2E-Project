@@ -1,0 +1,60 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site1.master.cs" Inherits="LoginApplication.Site1" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+    <%--bootstrap css --%>
+    <link href="Bootstrap/CSS/bootstrap.min.css" rel="stylesheet" />
+
+    <%--jquery--%>
+    <script src="Bootstrap/JS/jquery-3.4.1.slim.min.js"></script>
+    <%--popper js--%>
+    <script src="Bootstrap/JS/popper.min.js"></script>
+    <%--bootstrap--%>
+    <script src="Bootstrap/JS/bootstrap.min.js"></script>
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+
+        <div>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="#">
+                    <img src="IMAGES/devops.png" width="40" height="40" />
+                    DevOps
+                </a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Main content placeholder -->
+
+        <div>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+
+        <!-- Main content placeholder -->
+
+        <!-- Footer -->
+
+        <footer>
+            <div id="footer2" class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                        <p style="color: red">DevOps<a class="footerlinks" href="#" target="_blank">Brains</a></p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- ./Footer -->
+    </form>
+</body>
+</html>
