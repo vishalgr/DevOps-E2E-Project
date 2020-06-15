@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
 pipeline {
-    agent BuildServer
+    agent { label 'BuildServer' }
     triggers {
         // Check for the commits on every one min.
         pollSCM('* * * * *') 
