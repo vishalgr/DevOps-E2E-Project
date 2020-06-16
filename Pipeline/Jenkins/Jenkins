@@ -47,7 +47,6 @@ pipeline {
                 }
             }
         }
-        
         stage('Test') {
             // TODO: Test machine label to be used
             agent { label 'TestMachine' }
