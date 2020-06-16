@@ -10,7 +10,11 @@ Rem Example:
 Rem 1. Build.Bat --clean
 Rem 2. Build.Bat --full
 Rem        which does clean and then build.
-Rem 2. Build.Bat --incremental
+Rem 3. Build.Bat --incremental
+
+Rem To build at server, below command to be used:
+Rem 3. Build.Bat --server
+
 
 echo Command called: %0 %*
 set SCRIPT_DIR=%~dp0
@@ -53,6 +57,13 @@ if /I "%~1" EQU "--incremental" (
 if /I "%~1" EQU "--full" (
     set CLEAN=true
     set FULL_BUILD=true
+    shift
+    goto PARSE_ARGS
+)
+if /I "%~1" EQU "--server" (
+    set CLEAN=true
+    set FULL_BUILD=true
+    copy /y C:\Config\nuget.config %SCRIPT_DIR%
     shift
     goto PARSE_ARGS
 )

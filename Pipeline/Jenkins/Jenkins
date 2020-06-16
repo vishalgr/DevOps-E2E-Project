@@ -41,12 +41,13 @@ pipeline {
                         // Command called: Build.bat 
                         // 21:41:54  \Java\jre1.8.0_172\bin"" was unexpected at this time.
 
-                        bat returnStatus: false, script:"Build.bat"
+                        bat returnStatus: false, script:"Build.bat --server"
 
                     }
                 }
             }
         }
+        
         stage('Test') {
             // TODO: Test machine label to be used
             agent { label 'TestMachine' }
