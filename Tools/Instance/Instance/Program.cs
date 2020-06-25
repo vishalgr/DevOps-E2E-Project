@@ -18,7 +18,7 @@ namespace Instance
             string keyPairName = "DevOps_Wi";
             string instanceSize = "t2.micro";
 
-            Amazon.Util.ProfileManager.RegisterProfile("default", "AKIA3FGJXRIVTCHJ2SNN", "0jjJhJ+pNClzf7xBuZr4ZktvMdgtxEzRIZd/fvJ2");
+            Amazon.Util.ProfileManager.RegisterProfile("default", "MyAccessKey", "MySecretKey");
             var ec2Client = new AmazonEC2Client(RegionEndpoint.USWest2);
             string subnetId = "subnet-cc4083b4";
             InstanceNetworkInterfaceSpecification networkSpecification = new InstanceNetworkInterfaceSpecification()
