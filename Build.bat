@@ -106,7 +106,7 @@ if errorlevel 1 goto error
 
 Powershell Write-host -BackgroundColor Green "Build succeeded"
 goto :eof
- 
+
 :error
 Powershell Write-host -BackgroundColor Red "Build failed"
 exit /b 1
