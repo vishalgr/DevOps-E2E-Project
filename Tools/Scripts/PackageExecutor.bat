@@ -2,7 +2,8 @@
 echo Command called: %0 %*
 :PARSE_ARGS
 if /I "%~1" EQU "" (
-Powershell Write-host -BackgroundColor Red "Parsing arguments cannot be null,plz pass the arguments Try --help for more info about passing arguments"
+Powershell Write-host -BackgroundColor Red "Parsing arguments cannot be null, please pass the arguments."
+goto help
 goto errorWithExit
 )
 if /I "%~1" EQU "--help" (
@@ -28,6 +29,10 @@ if not exist "%nuget%" (
  Powershell Write-host -BackgroundColor Red "nuget.exe File Not Found in the specified directory"
     goto errorWithExit
 )
+if not exist "%output%" (
+    mkdir %output%
+)
+
 %nuget% pack -OutputDirectory %output%
 		   if errorlevel 2 goto error
 		   echo the package is stored in "%output%"
@@ -38,7 +43,7 @@ if not exist "%nuget%" (
                     echo pushed successfully
 					) else (
 					goto error3
-					) 
+					)
 					)
 :errorWithExit
 exit /b 1
