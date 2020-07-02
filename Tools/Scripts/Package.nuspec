@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>ScalableDevOps</id>
+    <version>1.0.0</version>
+    <title>nic</title>
+    <authors>vishalgr</authors>
+    <owners>vishalgr</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<repository type="git" url="https://github.com/vishalgr/MasterClone1" />
+    <description>packages for all</description>
+    <tags>ScalableDevOps</tags>
+  </metadata>
+  <files>
+    <file src="..\..\Output\Publish\HelloWorld\*" target = "lib\HelloWorld"></file>
+    <file src="..\..\Output\Publish\CSVConverter\*" target = "lib\CSVConverter"></file>
+    <file src="..\..\Output\Publish\TestRunner\*" target = "lib\TestRunner"></file>
+</files>
+</package>
