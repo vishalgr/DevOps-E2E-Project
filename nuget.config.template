@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Pre-requisite: Run the command before publishing the package
+nuget source Add -Name "github" -Source "https://nuget.pkg.github.com/vishalgr/index.json" -UserName username -Password <40charPasswordKey>
+-->
+
 <configuration>
     <packageSources>
         <clear />
-        <add key="github" value="https://nuget.pkg.github.com/vishalgr/index.json" />
         <add key="NuGet v2" value="https://www.nuget.org/api/v2/" />
     </packageSources>
     <packageSourceCredentials>
