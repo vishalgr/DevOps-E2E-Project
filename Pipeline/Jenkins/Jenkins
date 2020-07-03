@@ -51,6 +51,7 @@ pipeline {
                         SCM_COMMIT = scmVars.GIT_COMMIT 
                         // Get first 8 characters of the commit id. (common notation).
                         SCM_COMMIT = SCM_COMMIT.substring(0,8)
+                        currentBuild.displayName = "${SCM_COMMIT}"
 
                         println "SCM_URL: ${SCM_URL}"
                         println "SCM_BRANCH: ${SCM_BRANCH}"
