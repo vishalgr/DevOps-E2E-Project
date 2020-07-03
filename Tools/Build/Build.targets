@@ -12,15 +12,7 @@ Build script
 
   <ItemGroup>
     <Solutions Include="..\TestRunner\TestRunner.sln" />
-	  <Solutions Include="..\CSVConverter\CSVConverter.sln" />
-	  <Solutions Include="..\LoginApplication\LoginApplication.sln" />      
-    
-    <!-- Contents to be published -->
-    <PackageContent Include="$(CodebasePath)CSVConverter\Output\Bin\*.*">
-      <PackageName>CSVConverter</PackageName>
-    </PackageContent>
-    <PackageContent Include="$(CodebasePath)TestRunner\Output\Bin\*.*">
-      <PackageName>TestRunner</PackageName>
-    </PackageContent>
+    <Solutions Include="..\CSVConverter\CSVConverter.sln" />
+    <Solutions Include="..\LoginApplication\LoginApplication.sln" />
   </ItemGroup>
 </Project>

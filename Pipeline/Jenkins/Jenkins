@@ -11,7 +11,7 @@ pipeline {
         disableConcurrentBuilds()
 
         // Number of build information to retain in UI.
-        buildDiscarder(logRotator(daysToKeepStr: '2'))
+        buildDiscarder(logRotator(numToKeepStr: '5'))
 
         // Checkout only where it is required.
         skipDefaultCheckout()
