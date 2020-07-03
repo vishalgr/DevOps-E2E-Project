@@ -46,7 +46,7 @@
   </Target>
 
 
-  <Target Name="Build" DependsOnTargets="RestoreNuGetPackages" >
+  <Target Name="Build_" DependsOnTargets="RestoreNuGetPackages" >
     <Message Text="MSBuildBinPath: $(MSBuildBinPath)" />
     <Message Text="Building projects: @(Solutions)" />
     <MSBuild Projects="%(Solutions.Identity)"
@@ -55,5 +55,8 @@
       StopOnFirstFailure="$(StopOnFirstFailure)"
       BuildInParallel="false" />
   </Target>
+  <Target Name="Publish" DependsOnTargets="Publish_" />
+  
+  <Target Name="Build" DependsOnTargets="Build_;Publish" />
 
 </Project>

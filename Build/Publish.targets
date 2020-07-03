@@ -10,11 +10,29 @@
     <MSBuildProjectDirectoryWithSlash Condition="HasTrailingSlash('$(MSBuildProjectDirectory)')"
     >$(MSBuildProjectDirectory)</MSBuildProjectDirectoryWithSlash>
     <StopOnFirstFailure>true</StopOnFirstFailure>
+    <CodebasePath>..\</CodebasePath>
 
   </PropertyGroup>
   
   <!-- Collect publish scripts. -->
   <Target Name="_CollectPublishScripts">
+
+     <!-- Contents to be published -->
+     <ItemGroup>
+        <PackageContent Include="$(CodebasePath)..\tools\CSVConverter\Output\Bin\*.*">
+          <PackageName>CSVConverter</PackageName>
+        </PackageContent>
+        <PackageContent Include="$(CodebasePath)..\tools\TestRunner\Output\Bin\*.*">
+          <PackageName>TestRunner</PackageName>
+        </PackageContent>
+        <PackageContent Include="$(CodebasePath)..\tools\LoginApplication\Output\Bin\*.*">
+          <PackageName>LoginApplication</PackageName>
+        </PackageContent>
+        <PackageContent Include="$(CodebasePath)..\Examples\HelloWorld\Output\Bin\*.*">
+          <PackageName>HelloWorld</PackageName>
+        </PackageContent>
+    </ItemGroup> 
+  
     <Message Text="PackageContent: %(PackageContent.PackageName)" />
     <Message Text="Solutions: @(Solutions)" />
   </Target>
@@ -26,6 +44,6 @@
     />
   </Target>
 
-   <Target Name="Publish" DependsOnTargets="_CollectPublishScripts;CopyToMainPublish"/>
+   <Target Name="Publish_" DependsOnTargets="_CollectPublishScripts;CopyToMainPublish"/>
    <!-- Condition=" '@(PackageContent)' != '' " -->
 </Project>
