@@ -18,11 +18,19 @@ pipeline {
     }
     environment {
         // Define global variables here
-        var1 = "value1"
+        BUILD_DIRECTORY = "Product\\"
+        PUBLISH_DIRECTORY = "${BUILD_DIRECTORY}Output\\Publish\\"
+        TEST_RESULTS_SHARE = "\\\\ec2-34-219-107-255.us-west-2.compute.amazonaws.com\\TestResultsRepository"
+        
+        TEST_STASH_ID = "StashTestBinaries"
+        
+        // SCM Vars
+        SCM_URL = ""
+        SCM_BRANCH = ""
+        SCM_COMMIT = ""
     }
     stages {
         stage('Build') {
-            // TODO: Build server label to be used
             agent { label 'BuildServer' }
             options {
                timeout(time: 10, unit: 'MINUTES')
@@ -34,23 +42,43 @@ pipeline {
 
                     // Print all env variables set so far.
                     bat returnStatus: false, script:"set "
+                    dir("${BUILD_DIRECTORY}") {
+                        def scmVars = checkout scm
 
-                    dir("productArchive") {
-                        checkout scm
-                        // TODO:  Below error occurs in the Jenkins console
-                        // Command called: Build.bat 
-                        // 21:41:54  \Java\jre1.8.0_172\bin"" was unexpected at this time.
+                        println "scmVars: ${scmVars}"
+                        SCM_URL = scmVars.GIT_URL
+                        SCM_BRANCH = scmVars.GIT_BRANCH
+                        SCM_COMMIT = scmVars.GIT_COMMIT 
+                        // Get first 8 characters of the commit id. (common notation).
+                        SCM_COMMIT = SCM_COMMIT.substring(0,8)
 
+                        println "SCM_URL: ${SCM_URL}"
+                        println "SCM_BRANCH: ${SCM_BRANCH}"
+                        println "SCM_COMMIT: ${SCM_COMMIT}"
+                        
+                        // scmVars: [GIT_BRANCH:origin/branches/RealizePipeline_Mani, GIT_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_PREVIOUS_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_PREVIOUS_SUCCESSFUL_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_URL:https://github.com/vishalgr/DEVOPS_test/]
+                        
+                        // Build the product archive 
                         bat returnStatus: false, script:"Build.bat --server"
-
+                        
+                        // Get all test binaries into one directory
+                        def buildPublish = "${WORKSPACE}\\${PUBLISH_DIRECTORY}"
+                        def buildCombinedBinaries = "${buildPublish}Combined\\"
+                        println "buildPublish: ${buildPublish}"
+                        println "buildCombinedBinaries: ${buildCombinedBinaries}"
+                        if(! fileExists("${buildCombinedBinaries}")) {
+                            error "buildCombinedBinaries items not found"
+                        }                       
                     }
                 }
             }
         }
-
+        
+        // All the test stages shall be placed under this test stage.
         stage('Test') {
             // Disable test execution unless complete pipeline works flowlessly.
-            when {  expression { return false} }
+            //when {  expression { return false} }
+            when {branch 'master'}
             parallel {
                 stage('Test_TestSuite1') {
                     agent { label 'win-test-slave' }
@@ -78,6 +106,22 @@ pipeline {
                 }
             }
         }
+        
+        stage('Publish') {
+            when {branch 'master'}
+            agent { label 'BuildServer' }
+            options {
+               timeout(time: 10, unit: 'MINUTES')
+               timestamps()
+            }
+            steps {
+                script{
+                   // TODO:
+                   // Publish the package to the GitHub, so that customers can consume it.
+                   println "PUBLISH_DIRECTORY: ${PUBLISH_DIRECTORY}"
+                }
+            }
+        }
     }
 }
 
@@ -85,4 +129,21 @@ pipeline {
 def setup() {
     println "Current stage is: ${STAGE_NAME}"
     cleanWs disableDeferredWipeout: true, deleteDirs: true
+}
+
+def CopyFolder(String source, String destination, String filesToCopy="*.*", boolean recursive=true) {
+    def recursiveParameter = ""
+    if (recursive) {
+        recursiveParameter = "/e"
+    }
+    bat returnStatus: false, script:"""
+        @echo off
+        robocopy ${source} ${destination} ${filesToCopy} ${recursiveParameter} /np /r:3 /w:10
+        if errorlevel 8 (
+            rem It is a general approach to consider error codes 8 and higher as failing
+            exit /b 1
+        )
+        rem It is a general approach to consider error codes 0, 1, 2 and 4 as successful
+        exit /b 0
+    """
 }

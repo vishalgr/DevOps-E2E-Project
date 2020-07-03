@@ -34,13 +34,17 @@
     </ItemGroup> 
   
     <Message Text="PackageContent: %(PackageContent.PackageName)" />
-    <Message Text="Solutions: @(Solutions)" />
   </Target>
   
   <Target Name="CopyToMainPublish">  
     <Copy
         SourceFiles="@(PackageContent)"
         DestinationFiles="@(PackageContent->'$(MainPublishDirectory)\%(PackageName)\%(Filename)%(Extension)')"
+    />
+    <!-- Create combined package for testing purpose -->
+    <Copy
+        SourceFiles="@(PackageContent)"
+        DestinationFiles="@(PackageContent->'$(MainPublishDirectory)\Combined\%(Filename)%(Extension)')"
     />
   </Target>
 
