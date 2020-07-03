@@ -22,7 +22,7 @@ pipeline {
         PUBLISH_DIRECTORY = "${BUILD_DIRECTORY}Output\\Publish\\"
         TEST_RESULTS_SHARE = "\\\\ec2-34-219-107-255.us-west-2.compute.amazonaws.com\\TestResultsRepository"
         
-        TEST_STASH_ID = "StashTestBinaries"
+        STASHID_TEST_BINARIES = "StashTestBinaries"
         
         // SCM Vars
         SCM_URL = ""
@@ -68,7 +68,10 @@ pipeline {
                         println "buildCombinedBinaries: ${buildCombinedBinaries}"
                         if(! fileExists("${buildCombinedBinaries}")) {
                             error "buildCombinedBinaries items not found"
-                        }                       
+                        }
+
+                        // Stash the binaries
+                        stash includes: "${buildCombinedBinaries}\\**" ,allowEmpty: true, name: STASHID_TEST_BINARIES
                     }
                 }
             }
