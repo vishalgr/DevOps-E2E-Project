@@ -18,11 +18,19 @@ pipeline {
     }
     environment {
         // Define global variables here
-        var1 = "value1"
+        BUILD_DIRECTORY = "Product\\"
+        PUBLISH_DIRECTORY = "${BUILD_DIRECTORY}Output\\Publish\\"
+        TEST_RESULTS_SHARE = "\\\\ec2-34-219-107-255.us-west-2.compute.amazonaws.com\\TestResultsRepository\\"
+        
+        STASHID_TEST_BINARIES = "StashTestBinaries"
+        
+        // SCM Vars
+        SCM_URL = ""
+        SCM_BRANCH = ""
+        SCM_COMMIT = ""
     }
     stages {
         stage('Build') {
-            // TODO: Build server label to be used
             agent { label 'BuildServer' }
             options {
                timeout(time: 10, unit: 'MINUTES')
@@ -34,23 +42,48 @@ pipeline {
 
                     // Print all env variables set so far.
                     bat returnStatus: false, script:"set "
+                    dir("${BUILD_DIRECTORY}") {
+                        def scmVars = checkout scm
 
-                    dir("productArchive") {
-                        checkout scm
-                        // TODO:  Below error occurs in the Jenkins console
-                        // Command called: Build.bat 
-                        // 21:41:54  \Java\jre1.8.0_172\bin"" was unexpected at this time.
+                        println "scmVars: ${scmVars}"
+                        SCM_URL = scmVars.GIT_URL
+                        SCM_BRANCH = scmVars.GIT_BRANCH
+                        SCM_COMMIT = scmVars.GIT_COMMIT 
+                        // Get first 8 characters of the commit id. (common notation).
+                        SCM_COMMIT = SCM_COMMIT.substring(0,8)
+                        currentBuild.displayName = "${SCM_COMMIT}" 
 
+                        println "SCM_URL: ${SCM_URL}"
+                        println "SCM_BRANCH: ${SCM_BRANCH}"
+                        println "SCM_COMMIT: ${SCM_COMMIT}"
+                        
+                        // Ex: scmVars: [GIT_BRANCH:origin/branches/RealizePipeline_Mani, GIT_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_PREVIOUS_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_PREVIOUS_SUCCESSFUL_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_URL:https://github.com/vishalgr/DEVOPS_test/]
+                        
+                        // Build the product archive 
                         bat returnStatus: false, script:"Build.bat --server"
-
+                        
+                        // Stash the binaries
+                        def buildPublish = "${WORKSPACE}\\${PUBLISH_DIRECTORY}"
+                        def buildCombinedBinaries = "Output\\Work\\Combined\\"
+                        def workBinaries = "Output\\Work\\Binaries\\"
+                        println "buildPublish: ${buildPublish}"
+                        println "buildCombinedBinaries: ${buildCombinedBinaries}"
+                        if(! fileExists("${buildCombinedBinaries}")) {
+                            error "buildCombinedBinaries items not found"
+                        }
+                        //stash includes: "${buildCombinedBinaries}\\**" ,allowEmpty: true, name: "${STASHID_TEST_BINARIES}"
+                        // Note: For some reasons stash with only relative path is working
+                        stash allowEmpty: true, includes: "${buildCombinedBinaries}**,${workBinaries}**", name: STASHID_TEST_BINARIES
                     }
                 }
             }
         }
-
+        
+        // All the test stages shall be placed under this test stage.
         stage('Test') {
             // Disable test execution unless complete pipeline works flowlessly.
-            when {  expression { return false} }
+            //when {  expression { return false} }
+            when {branch 'master'}
             parallel {
                 stage('Test_TestSuite1') {
                     agent { label 'win-test-slave' }
@@ -61,6 +94,7 @@ pipeline {
                     steps {
                         script{
                             setup()
+                            testExecutiuon()
                         }
                     }
                 }
@@ -73,8 +107,25 @@ pipeline {
                     steps {
                         script{
                             setup()
+                            testExecutiuon()
                         }
                     }
+                }
+            }
+        }
+        
+        stage('Publish') {
+            when {branch 'master'}
+            agent { label 'BuildServer' }
+            options {
+               timeout(time: 10, unit: 'MINUTES')
+               timestamps()
+            }
+            steps {
+                script{
+                   // TODO:
+                   // Publish the package to the GitHub, so that customers can consume it.
+                   println "PUBLISH_DIRECTORY: ${PUBLISH_DIRECTORY}"
                 }
             }
         }
@@ -84,5 +135,47 @@ pipeline {
 // ===== Functions =====
 def setup() {
     println "Current stage is: ${STAGE_NAME}"
+    bat returnStatus: false, script:"WhoAmI"
     cleanWs disableDeferredWipeout: true, deleteDirs: true
+}
+
+def CopyFolder(String source, String destination, String filesToCopy="*.*", boolean recursive=true) {
+    def recursiveParameter = ""
+    if (recursive) {
+        recursiveParameter = "/e"
+    }
+    bat returnStatus: false, script:"""
+        @echo off
+        robocopy ${source} ${destination} ${filesToCopy} ${recursiveParameter} /np /r:3 /w:10
+        if errorlevel 8 (
+            rem It is a general approach to consider error codes 8 and higher as failing
+            exit /b 1
+        )
+        rem It is a general approach to consider error codes 0, 1, 2 and 4 as successful
+        exit /b 0
+    """
+}
+
+def testExecutiuon() {
+    // Set up the test bed
+    unstash STASHID_TEST_BINARIES
+
+    // Execute tests
+    def executor = "${WORKSPACE}\\Output\\Work\\Binaries\\NunitConsoleRunner\\nunit3-console.exe"
+    def testAssembles = "${WORKSPACE}\\Output\\work\\Combined\\"
+    def testResults = "${WORKSPACE}\\Output\\TestResults\\"
+    // Write a log file so that in worst case a log file is available in the test results, contains which jenkins job actually triggered these results.
+    dir(testResults) {
+        writeFile file:"readme.txt", text:"This directory contains logs created as part of Jenkins job: ${BUILD_URL}, and node is ${NODE_NAME}"
+    }
+
+    def testRunnerCommand = "${testAssembles}DevOps.TestRunner.exe --Executor ${executor} --TestFramework NUnit --AssemblyDirectory ${testAssembles} --OutputDirectory ${testResults}"
+    println "testRunnerCommand: ${testRunnerCommand}"
+    bat returnStatus: false, script: testRunnerCommand
+
+    // Copy test results to the build server share
+    def now = new Date()
+    def dateTimeString = now.format("yyyyMMddHHmmss", TimeZone.getTimeZone('UTC'))
+    def targetResultsShare = "${TEST_RESULTS_SHARE}${SCM_COMMIT}_${dateTimeString}\\"
+    CopyFolder(testResults, targetResultsShare)
 }

@@ -7,8 +7,8 @@
     <ProjectGuid>{E6907C50-2499-4DA7-BEB7-F03B78B69033}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DevOps.CSVConverter.Tests</RootNamespace>
-    <AssemblyName>DevOps.CSVConverter.Tests</AssemblyName>
+    <RootNamespace>DevOps.Tests.CSVConverter</RootNamespace>
+    <AssemblyName>DevOps.Tests.CSVConverter</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

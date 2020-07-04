@@ -25,22 +25,35 @@
         <PackageContent Include="$(CodebasePath)..\tools\TestRunner\Output\Bin\*.*">
           <PackageName>TestRunner</PackageName>
         </PackageContent>
-        <PackageContent Include="$(CodebasePath)..\tools\LoginApplication\Output\Bin\*.*">
+        <!-- LoginApplication tests are running forever in the test machines. To be disabeld until fixed.
+           <PackageContent Include="$(CodebasePath)..\tools\LoginApplication\Output\Bin\*.*">
           <PackageName>LoginApplication</PackageName>
-        </PackageContent>
+        </PackageContent> -->
         <PackageContent Include="$(CodebasePath)..\Examples\HelloWorld\Output\Bin\*.*">
           <PackageName>HelloWorld</PackageName>
         </PackageContent>
     </ItemGroup> 
   
     <Message Text="PackageContent: %(PackageContent.PackageName)" />
-    <Message Text="Solutions: @(Solutions)" />
   </Target>
   
-  <Target Name="CopyToMainPublish">  
+  <Target Name="CopyToMainPublish">
+    <!-- Remove test assemblies from being published, since which will not be delivered to the customer -->
+    <ItemGroup>
+      <__PublishPackageContent Include= "@(PackageContent)"
+        Condition="! ($([System.Text.RegularExpressions.Regex]::IsMatch('%(PackageContent.Filename)', 'NUnit*', RegexOptions.IgnoreCase)) OR $([System.Text.RegularExpressions.Regex]::IsMatch('%(PackageContent.Filename)', 'DevOps.Tests.*', RegexOptions.IgnoreCase)) OR ('%(PackageContent.Filename)' == 'chromedriver') OR ('%(PackageContent.Filename)' == 'IEDriverServer') ) " >
+        <PackageName>%(PackageContent.PackageName)</PackageName>
+      </__PublishPackageContent>
+    </ItemGroup>
+    <Copy
+        SourceFiles="@(__PublishPackageContent)"
+        DestinationFiles="@(__PublishPackageContent->'$(MainPublishDirectory)\%(PackageName)\%(Filename)%(Extension)')"
+    />
+
+    <!-- Create combined package, which is helpful to execute all tests in one invocation -->
     <Copy
         SourceFiles="@(PackageContent)"
-        DestinationFiles="@(PackageContent->'$(MainPublishDirectory)\%(PackageName)\%(Filename)%(Extension)')"
+        DestinationFiles="@(PackageContent->'$(MainPublishDirectory)\..\Work\Combined\%(Filename)%(Extension)')"
     />
   </Target>
 
