@@ -17,49 +17,42 @@ namespace DevOps.Tests.ProductionTests
         [Test]
         public void TestThatAdds_AlwaysPass()
         {
-
             int r = help.add(20, 30);
             Assert.AreEqual(50, r);
         }
         [Test]
         public void TestThatAdds_AlwaysPass_2()
         {
-
             int r = help.add(10, 40);
             Assert.AreEqual(50, r);
         }
         [Test]
         public void TestThatAddsFails()
         {
-
             int r = help.add(50, 30);
             Assert.AreEqual(70, r);
         }
         [Test]
         public void TestThatAddsFails_2()
         {
-
             int r = help.add(50, 30);
             Assert.AreEqual(60, r);
         }
         [Test]
         public void TestThatCheckesEqualAlwaysFails_1()
         {
-
             int r = help.add(50, 30);
             Assert.AreEqual(70, r);
         }
         [Test]
         public void TestThatCheckesEqualAlwaysPass_1()
         {
-
             int r = help.add(50, 30);
             Assert.AreEqual(80, r);
         }
         [Test]
         public void TestThatCheckesEqualAlwaysFails_2()
         {
-
             int r = help.add(50, 60);
             Assert.AreEqual(80, r);
         }
@@ -72,14 +65,12 @@ namespace DevOps.Tests.ProductionTests
         [Test]
         public void TestThatCheckesEqualAlwaysPass_3()
         {
-
             int r = help.add(90, 30);
             Assert.AreEqual(120, r);
         }
         [Test]
         public void TestThatCheckesEqualAlwaysPass_4()
         {
-
             int r = help.add(160, 30);
             Assert.AreEqual(190, r);
         }

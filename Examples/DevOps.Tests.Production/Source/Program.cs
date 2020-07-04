@@ -4,7 +4,7 @@ namespace DevOps.Tests.Production
 {
     class Program
     {
-         static void Main(string[] args)
+        static void Main(string[] args)
         {
             int num1 = 10;
             int num2 = 14;
@@ -13,20 +13,16 @@ namespace DevOps.Tests.Production
             Console.WriteLine(p);
             randomnumbergenerator r = new randomnumbergenerator();
             int q = r.RandomNumber();
-
             Console.WriteLine(q);
         }
     }
     public class Helper
     {
-
         public int add(int a, int b)
         {
-
             int x = a + b;
             return x;
         }
-
     }
 
     public class randomnumbergenerator
