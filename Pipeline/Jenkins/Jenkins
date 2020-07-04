@@ -57,20 +57,23 @@ pipeline {
                         println "SCM_BRANCH: ${SCM_BRANCH}"
                         println "SCM_COMMIT: ${SCM_COMMIT}"
                         
-                        // scmVars: [GIT_BRANCH:origin/branches/RealizePipeline_Mani, GIT_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_PREVIOUS_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_PREVIOUS_SUCCESSFUL_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_URL:https://github.com/vishalgr/DEVOPS_test/]
+                        // Ex: scmVars: [GIT_BRANCH:origin/branches/RealizePipeline_Mani, GIT_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_PREVIOUS_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_PREVIOUS_SUCCESSFUL_COMMIT:dcaba3a4ae1331d31d9ddfbaf4a5a7d0f7cd03a6, GIT_URL:https://github.com/vishalgr/DEVOPS_test/]
                         
                         // Build the product archive 
                         bat returnStatus: false, script:"Build.bat --server"
                         
                         // Stash the binaries
                         def buildPublish = "${WORKSPACE}\\${PUBLISH_DIRECTORY}"
-                        def buildCombinedBinaries = "${buildPublish}..\\Work\\Combined\\"
+                        def buildCombinedBinaries = "Output\\Work\\Combined\\"
+                        def workBinaries = "Output\\Work\\Binaries\\"
                         println "buildPublish: ${buildPublish}"
                         println "buildCombinedBinaries: ${buildCombinedBinaries}"
                         if(! fileExists("${buildCombinedBinaries}")) {
                             error "buildCombinedBinaries items not found"
                         }
-                        stash includes: "${buildCombinedBinaries}\\**" ,allowEmpty: true, name: STASHID_TEST_BINARIES
+                        //stash includes: "${buildCombinedBinaries}\\**" ,allowEmpty: true, name: "${STASHID_TEST_BINARIES}"
+                        // Note: For some reasons stash with only relative path is working
+                        stash allowEmpty: true, includes: "${buildCombinedBinaries}**,${workBinaries}**", name: STASHID_TEST_BINARIES
                     }
                 }
             }
@@ -91,6 +94,19 @@ pipeline {
                     steps {
                         script{
                             setup()
+                            // Set up test bed
+                            unstash STASHID_TEST_BINARIES
+
+                            // Execute tests
+                            def executor = "${WORKSPACE}\\Output\\Work\\Binaries\\NunitConsoleRunner\\nunit3-console.exe"
+                            def testAssembles = "${WORKSPACE}\\Output\\work\\Combined\\"
+                            def testResults = "${WORKSPACE}\\Output\\TestResults\\"
+
+                            def testRunnerCommand = "${testAssembles}DevOps.TestRunner.exe --Executor ${executor} --TestFramework NUnit --AssemblyDirectory ${testAssembles} --OutputDirectory ${testResults}"
+                            println "testRunnerCommand: ${testRunnerCommand}"
+                            bat returnStatus: false, script: testRunnerCommand
+
+                            // Copy test results to the build server share
                         }
                     }
                 }

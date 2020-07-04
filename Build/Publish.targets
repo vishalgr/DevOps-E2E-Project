@@ -25,9 +25,10 @@
         <PackageContent Include="$(CodebasePath)..\tools\TestRunner\Output\Bin\*.*">
           <PackageName>TestRunner</PackageName>
         </PackageContent>
-        <PackageContent Include="$(CodebasePath)..\tools\LoginApplication\Output\Bin\*.*">
+        <!-- LoginApplication tests are running forever in the test machines. To be disabeld until fixed.
+           <PackageContent Include="$(CodebasePath)..\tools\LoginApplication\Output\Bin\*.*">
           <PackageName>LoginApplication</PackageName>
-        </PackageContent>
+        </PackageContent> -->
         <PackageContent Include="$(CodebasePath)..\Examples\HelloWorld\Output\Bin\*.*">
           <PackageName>HelloWorld</PackageName>
         </PackageContent>
