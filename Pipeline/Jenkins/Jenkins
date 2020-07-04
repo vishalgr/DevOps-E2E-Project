@@ -20,7 +20,7 @@ pipeline {
         // Define global variables here
         BUILD_DIRECTORY = "Product\\"
         PUBLISH_DIRECTORY = "${BUILD_DIRECTORY}Output\\Publish\\"
-        TEST_RESULTS_SHARE = "\\\\ec2-34-219-107-255.us-west-2.compute.amazonaws.com\\TestResultsRepository"
+        TEST_RESULTS_SHARE = "\\\\ec2-34-219-107-255.us-west-2.compute.amazonaws.com\\TestResultsRepository\\"
         
         STASHID_TEST_BINARIES = "StashTestBinaries"
         
@@ -94,19 +94,7 @@ pipeline {
                     steps {
                         script{
                             setup()
-                            // Set up test bed
-                            unstash STASHID_TEST_BINARIES
-
-                            // Execute tests
-                            def executor = "${WORKSPACE}\\Output\\Work\\Binaries\\NunitConsoleRunner\\nunit3-console.exe"
-                            def testAssembles = "${WORKSPACE}\\Output\\work\\Combined\\"
-                            def testResults = "${WORKSPACE}\\Output\\TestResults\\"
-
-                            def testRunnerCommand = "${testAssembles}DevOps.TestRunner.exe --Executor ${executor} --TestFramework NUnit --AssemblyDirectory ${testAssembles} --OutputDirectory ${testResults}"
-                            println "testRunnerCommand: ${testRunnerCommand}"
-                            bat returnStatus: false, script: testRunnerCommand
-
-                            // Copy test results to the build server share
+                            testExecutiuon()
                         }
                     }
                 }
@@ -119,6 +107,7 @@ pipeline {
                     steps {
                         script{
                             setup()
+                            testExecutiuon()
                         }
                     }
                 }
@@ -146,6 +135,7 @@ pipeline {
 // ===== Functions =====
 def setup() {
     println "Current stage is: ${STAGE_NAME}"
+    bat returnStatus: false, script:"WhoAmI"
     cleanWs disableDeferredWipeout: true, deleteDirs: true
 }
 
@@ -164,4 +154,28 @@ def CopyFolder(String source, String destination, String filesToCopy="*.*", bool
         rem It is a general approach to consider error codes 0, 1, 2 and 4 as successful
         exit /b 0
     """
+}
+
+def testExecutiuon() {
+    // Set up the test bed
+    unstash STASHID_TEST_BINARIES
+
+    // Execute tests
+    def executor = "${WORKSPACE}\\Output\\Work\\Binaries\\NunitConsoleRunner\\nunit3-console.exe"
+    def testAssembles = "${WORKSPACE}\\Output\\work\\Combined\\"
+    def testResults = "${WORKSPACE}\\Output\\TestResults\\"
+    // Write a log file so that in worst case a log file is available in the test results, contains which jenkins job actually triggered these results.
+    dir(testResults) {
+        writeFile file:"readme.txt", text:"This directory contains logs created as part of Jenkins job: ${BUILD_URL}, and node is ${NODE_NAME}"
+    }
+
+    def testRunnerCommand = "${testAssembles}DevOps.TestRunner.exe --Executor ${executor} --TestFramework NUnit --AssemblyDirectory ${testAssembles} --OutputDirectory ${testResults}"
+    println "testRunnerCommand: ${testRunnerCommand}"
+    bat returnStatus: false, script: testRunnerCommand
+
+    // Copy test results to the build server share
+    def now = new Date()
+    def dateTimeString = now.format("yyyyMMddHHmmss", TimeZone.getTimeZone('UTC'))
+    def targetResultsShare = "${TEST_RESULTS_SHARE}${SCM_COMMIT}_${dateTimeString}\\"
+    CopyFolder(testResults,targetResultsShare)
 }
