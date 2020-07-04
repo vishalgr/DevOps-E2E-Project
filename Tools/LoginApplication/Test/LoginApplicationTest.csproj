@@ -7,8 +7,8 @@
     <ProjectGuid>{333B81A1-D304-4D04-9239-EFB855F95798}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DevOps.Test.LoginApplication</RootNamespace>
-    <AssemblyName>DevOps.Test.LoginApplication</AssemblyName>
+    <RootNamespace>DevOps.Tests.LoginApplication</RootNamespace>
+    <AssemblyName>DevOps.Tests.LoginApplication</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

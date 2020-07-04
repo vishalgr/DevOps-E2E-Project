@@ -36,15 +36,23 @@
     <Message Text="PackageContent: %(PackageContent.PackageName)" />
   </Target>
   
-  <Target Name="CopyToMainPublish">  
+  <Target Name="CopyToMainPublish">
+    <!-- Remove test assemblies from being published, since which will not be delivered to the customer -->
+    <ItemGroup>
+      <__PublishPackageContent Include= "@(PackageContent)"
+        Condition="! ($([System.Text.RegularExpressions.Regex]::IsMatch('%(PackageContent.Filename)', 'NUnit*', RegexOptions.IgnoreCase)) OR $([System.Text.RegularExpressions.Regex]::IsMatch('%(PackageContent.Filename)', 'DevOps.Tests.*', RegexOptions.IgnoreCase)) OR ('%(PackageContent.Filename)' == 'chromedriver') OR ('%(PackageContent.Filename)' == 'IEDriverServer') ) " >
+        <PackageName>%(PackageContent.PackageName)</PackageName>
+      </__PublishPackageContent>
+    </ItemGroup>
     <Copy
-        SourceFiles="@(PackageContent)"
-        DestinationFiles="@(PackageContent->'$(MainPublishDirectory)\%(PackageName)\%(Filename)%(Extension)')"
+        SourceFiles="@(__PublishPackageContent)"
+        DestinationFiles="@(__PublishPackageContent->'$(MainPublishDirectory)\%(PackageName)\%(Filename)%(Extension)')"
     />
-    <!-- Create combined package for testing purpose -->
+
+    <!-- Create combined package, which is helpful to execute all tests in one invocation -->
     <Copy
         SourceFiles="@(PackageContent)"
-        DestinationFiles="@(PackageContent->'$(MainPublishDirectory)\Combined\%(Filename)%(Extension)')"
+        DestinationFiles="@(PackageContent->'$(MainPublishDirectory)\..\Work\Combined\%(Filename)%(Extension)')"
     />
   </Target>
 

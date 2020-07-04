@@ -64,7 +64,7 @@ pipeline {
                         
                         // Stash the binaries
                         def buildPublish = "${WORKSPACE}\\${PUBLISH_DIRECTORY}"
-                        def buildCombinedBinaries = "${buildPublish}Combined\\"
+                        def buildCombinedBinaries = "${buildPublish}..\\Work\\Combined\\"
                         println "buildPublish: ${buildPublish}"
                         println "buildCombinedBinaries: ${buildCombinedBinaries}"
                         if(! fileExists("${buildCombinedBinaries}")) {
