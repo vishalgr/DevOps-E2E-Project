@@ -62,7 +62,7 @@ pipeline {
                         // Build the product archive 
                         bat returnStatus: false, script:"Build.bat --server"
                         
-                        // Get all test binaries into one directory
+                        // Stash the binaries
                         def buildPublish = "${WORKSPACE}\\${PUBLISH_DIRECTORY}"
                         def buildCombinedBinaries = "${buildPublish}Combined\\"
                         println "buildPublish: ${buildPublish}"
@@ -70,8 +70,6 @@ pipeline {
                         if(! fileExists("${buildCombinedBinaries}")) {
                             error "buildCombinedBinaries items not found"
                         }
-
-                        // Stash the binaries
                         stash includes: "${buildCombinedBinaries}\\**" ,allowEmpty: true, name: STASHID_TEST_BINARIES
                     }
                 }
