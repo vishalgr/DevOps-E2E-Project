@@ -11,10 +11,14 @@ Build script
 
   <ItemGroup>
     <Solutions Include="..\HelloWorld\HelloWorld.sln" />
+	<Solutions Include="..\DevOps.Tests.Production\DevOps.Tests.Production.sln" />
 
     <!-- Contents to be published  -->
     <PackageContent Include="$(CodebasePath)HelloWorld\Output\Bin\*.*">
         <PackageName>HelloWorld</PackageName>
+    </PackageContent>
+	<PackageContent Include="$(CodebasePath)DevOps.Tests.Production\Output\Bin\*.*">
+        <PackageName>DevOps.Tests.Production</PackageName>
     </PackageContent>
   </ItemGroup>
 </Project>
