@@ -185,7 +185,7 @@ def testExecutiuon(String testSuiteName) {
     def executor = "${WORKSPACE}\\Output\\Work\\Binaries\\NunitConsoleRunner\\nunit3-console.exe"
     def testAssembles = "${WORKSPACE}\\Output\\work\\Combined\\"
     def outputDirectory = "${WORKSPACE}\\Output\\TestResults\\"
-    def testSuiteFullPath = "${WORKSPACE}\\${TEST_SUITES_DIR}\\${testSuiteName}"
+    def testSuiteFullPath = "${WORKSPACE}\\${TEST_SUITES_DIR}${testSuiteName}"
     
     println "Executing test suite: ${testSuiteFullPath}"
     if(! fileExists(testSuiteFullPath)) {
