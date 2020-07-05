@@ -32,6 +32,9 @@
         <PackageContent Include="$(CodebasePath)..\Examples\HelloWorld\Output\Bin\*.*">
           <PackageName>HelloWorld</PackageName>
         </PackageContent>
+		<PackageContent Include="$(CodebasePath)..\Examples\DevOpsProduction\Output\Bin\*.*">
+        <PackageName>DevOpsProduction</PackageName>
+    </PackageContent>
     </ItemGroup> 
   
     <Message Text="PackageContent: %(PackageContent.PackageName)" />
