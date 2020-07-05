@@ -6,17 +6,21 @@ using System.Text;
 using System.Threading.Tasks;
 using DevOps.Production;
 
-namespace DevOps.Tests.Production
-{
+// These tests are written to have productiuon like tests, to produce many states of a test. Result of this data is used in the dashboards.
+namespace DevOps.Tests.Production1 {
     [TestFixture]
     public class Tester
     {
         Helper help = new Helper();
         randomnumbergenerator generator = new randomnumbergenerator();
 
+        [SetUp]
+        public void TestCaseSetup() {
+            System.Threading.Thread.Sleep(500);
+        }
+
         [Test]
-        public void TestThatAdds_AlwaysPass()
-        {
+        public void TestThatAdds_AlwaysPass() {
             int r = help.add(20, 30);
             Assert.AreEqual(50, r);
         }
