@@ -94,7 +94,7 @@ pipeline {
                     steps {
                         script{
                             setup()
-                            testExecutiuon()
+                            testExecutiuon("TestSuite_Production1.xml")
                         }
                     }
                 }
@@ -107,7 +107,7 @@ pipeline {
                     steps {
                         script{
                             setup()
-                            testExecutiuon()
+                            testExecutiuon("TestSuite_Production2.xml")
                         }
                     }
                 }
@@ -180,6 +180,8 @@ def testExecutiuon(string testSuiteName) {
     def testAssembles = "${WORKSPACE}\\Output\\work\\Combined\\"
     def outputDirectory = "${WORKSPACE}\\Output\\TestResults\\"
     def testSuiteFullPath = "${WORKSPACE}\\${TEST_SUITES_DIR}\\${testSuiteName}"
+    
+    println "Executing test suite: ${testSuiteFullPath}"
     if(! testSuiteFullPath(testSuiteFullPath)) {
             error("Test suite file is not found: ${testSuiteFullPath}")
     }
