@@ -188,7 +188,7 @@ def testExecutiuon(String testSuiteName) {
     def testSuiteFullPath = "${WORKSPACE}\\${TEST_SUITES_DIR}\\${testSuiteName}"
     
     println "Executing test suite: ${testSuiteFullPath}"
-    if(! testSuiteFullPath(testSuiteFullPath)) {
+    if(! fileExists(testSuiteFullPath)) {
             error("Test suite file is not found: ${testSuiteFullPath}")
     }
     // Write a log file so that in worst case a log file is available in the test results, contains which jenkins job actually triggered these results.
