@@ -211,5 +211,5 @@ def testExecutiuon(String testSuiteName) {
     def now = new Date()
     def dateTimeString = now.format("yyyyMMddHHmmss", TimeZone.getTimeZone('UTC'))
     def targetResultsShare = "${TEST_RESULTS_SHARE}${SCM_COMMIT}_${dateTimeString}\\"
-    CopyFolder(testResults, targetResultsShare)
+    CopyFolder(outputDirectory, targetResultsShare)
 }
