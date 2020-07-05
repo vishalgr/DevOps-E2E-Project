@@ -39,14 +39,11 @@ if errorlevel 2 goto error
 echo the package is created successfully at "%output%"
 
 if exist 'dir /b "%output%\*.nupkg"' (
-    REM Without the option 'SkipDuplicate', the command fails indicating 'Response status code does not indicate success: 409 (Conflict).'
+    Rem Without the option 'SkipDuplicate', the command fails indicating 'Response status code does not indicate success: 409 (Conflict).'
     echo "Command to push the package to the repository: %nugetPath% push '%output%\*.nupkg' -src github -SkipDuplicate"
     %nugetPath% push "%output%\*.nupkg" -src "github" -SkipDuplicate
     if errorlevel 1 goto error
-        echo pushed successfully
-    ) else (
-        goto error3
-    )
+    echo pushed successfully
 )
 :errorWithExit
 exit /b 1
