@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DevOps.Tests.Production;
+using DevOps.Production;
 
-namespace DevOps.Tests.ProductionTests
+namespace DevOps.Tests.Production
 {
     [TestFixture]
     public class Tester
