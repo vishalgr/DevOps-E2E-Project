@@ -45,12 +45,18 @@ if exist 'dir /b "%output%\*.nupkg"' (
     if errorlevel 1 goto error
     echo pushed successfully
 )
+
+echo "PackageExecutor file executed successfully
+exit /b 0
+
 :errorWithExit
 exit /b 1
+
 :help
 Powershell Write-host -BackgroundColor Blue "Arguments to passed : --OutputDirectory outputDirectory-path"
 Powershell Write-host -BackgroundColor Blue "Example : --OutputDirectory  "D:\MasterClone\MasterClone\Output"
 exit /b 1
+
 :error
 Powershell Write-host -BackgroundColor Red "Execution Failed %errorlevel% "
 exit /b 1
