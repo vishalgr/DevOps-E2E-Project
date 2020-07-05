@@ -11,6 +11,6 @@ Build script
 
   <ItemGroup>
     <Solutions Include="..\HelloWorld\HelloWorld.sln" />
-	<Solutions Include="..\DevOpsProduction\DevOpsProduction.sln" />
+    <Solutions Include="..\DevOpsProduction\DevOpsProduction.sln" />
   </ItemGroup>
 </Project>

@@ -65,7 +65,6 @@ pipeline {
                         // Stash the binaries
                         def buildCombinedBinaries = "Output\\Work\\Combined\\"
                         def workBinaries = "Output\\Work\\Binaries\\"
-                        println "buildPublish: ${buildPublish}"
                         println "buildCombinedBinaries: ${buildCombinedBinaries}"
                         if(! fileExists("${buildCombinedBinaries}")) {
                             error "buildCombinedBinaries items not found"
@@ -80,9 +79,8 @@ pipeline {
         
         // All the test stages shall be placed under this test stage.
         stage('Test') {
-            // Disable test execution unless complete pipeline works flowlessly.
-            //when {  expression { return false} }
-            when {branch 'origin/branches/RealizePipeline_Mani'}
+            // Disable test execution until complete pipeline works flowlessly.
+            when { expression { return EvaluateBranch() } }
             parallel {
                 stage('Test_TestSuite1') {
                     agent { label 'win-test-slave' }
@@ -114,7 +112,7 @@ pipeline {
         }
         
         stage('Publish') {
-            when {branch 'origin/branches/RealizePipeline_Mani'}
+            when { expression { return EvaluateBranch() } }
             agent { label 'BuildServer' }
             options {
                timeout(time: 10, unit: 'MINUTES')
@@ -125,7 +123,7 @@ pipeline {
                     dir("${BUILD_DIRECTORY}") {
                         // Publish the package to the GitHub, so that customers can consume it.
                         catchError(message: "Publishing the package failed") {
-                            def outputDir = pwd() + "\\Output\\work\\"
+                            def outputDir = pwd() + "\\Output\\work" // Should not end with "\\" because batch file adds its own "\\".
                             bat returnStatus: false, script:"Tools\\Scripts\\PackageExecutor.bat  --OutputDirectory  ${outputDir}"
                         }
 
@@ -142,6 +140,14 @@ def setup() {
     println "Current stage is: ${STAGE_NAME}"
     bat returnStatus: false, script:"WhoAmI"
     cleanWs disableDeferredWipeout: true, deleteDirs: true
+}
+
+def EvaluateBranch() {
+    def expectedBranch = "origin/branches/RealizePipeline_Mani"
+    if(SCM_BRANCH == null) {
+        return false
+    }
+    return (SCM_BRANCH == expectedBranch)
 }
 
 def CopyFolder(String source, String destination, String filesToCopy="*.*", boolean recursive=true) {
