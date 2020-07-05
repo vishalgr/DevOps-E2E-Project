@@ -11,10 +11,5 @@ Build script
 
   <ItemGroup>
     <Solutions Include="..\HelloWorld\HelloWorld.sln" />
-
-    <!-- Contents to be published  -->
-    <PackageContent Include="$(CodebasePath)HelloWorld\Output\Bin\*.*">
-        <PackageName>HelloWorld</PackageName>
-    </PackageContent>
   </ItemGroup>
 </Project>
