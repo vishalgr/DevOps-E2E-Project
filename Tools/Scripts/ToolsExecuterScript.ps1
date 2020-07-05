@@ -10,6 +10,10 @@
 .EXAMPLE
     C:\PS> 
     TestExecuter.ps1 -Executor "C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -TestFramework NUnit -AssemblyDirectory D:\github\DEVOPS_test\Tools\LoginApplication\Output -OutputDirectory D:\DEVOPS_test\Tools\files
+    
+.EXAMPLE
+    C:\PS> 
+    TestExecuter.ps1 -Executor "C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -TestFramework NUnit -AssemblyDirectory D:\github\DEVOPS_test\Tools\LoginApplication\Output -OutputDirectory D:\DEVOPS_test\Tools\files --TestSuite D:\TestSuite_Production1.xml
 
 #>
 [CmdletBinding()]
@@ -26,6 +30,10 @@ Param (
     # Directory where test assemblies are located. Ex:The path to the folder where the dll of the test cases are stored.
     [Parameter(Mandatory=$true)]
     $AssemblyDirectory,
+    
+    # Full path of the Xml contains the test assemblies to be executed: 
+    [Parameter(Mandatory=$false)]
+    $TestSuite,
 
     # Directory where test results to be generated. Ex: The xml and csv files storing location.
     [Parameter(Mandatory=$true)]
@@ -39,8 +47,8 @@ Write-Host "scriptPath: $scriptPath"
 # Variables
 $scriptExecutionStatus = -1
 $Count = 1
-$testRunnerExe = Join-Path -Path "$scriptPath" -ChildPath "..\TestRunner\Output\DevOps.TestRunner.exe"
-$csvConverterExe = Join-Path -Path "$scriptPath" -ChildPath "..\CSVConverter\Output\DevOps.CSVConverter.exe"
+$testRunnerExe = Join-Path -Path "$scriptPath" -ChildPath "..\TestRunner\Output\bin\DevOps.TestRunner.exe"
+$csvConverterExe = Join-Path -Path "$scriptPath" -ChildPath "..\CSVConverter\Output\bin\DevOps.CSVConverter.exe"
 
 
 Function Log($message) {
@@ -79,6 +87,9 @@ Function RunTestRunner() {
     $testRunnerArguments += "--Executor `"$Executor`" "
     $testRunnerArguments += "--TestFramework `"$TestFramework`" "
     $testRunnerArguments += "--AssemblyDirectory `"$AssemblyDirectory`" "
+    if(-Not ([string]::IsNullOrEmpty($TestSuite))) {
+        $testRunnerArguments += "--TestSuite `"$TestSuite`" "
+    }
     $testRunnerArguments += "--OutputDirectory `"$OutputDirectory`" "
     $returnVal = RunExecutable $testRunnerExe $testRunnerArguments
     if($returnVal -ne 0) {

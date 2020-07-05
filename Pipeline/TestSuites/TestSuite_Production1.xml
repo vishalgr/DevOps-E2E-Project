@@ -1,0 +1,5 @@
+<TestSuite>
+    <TestAssembly>DevOps.Tests.CSVConverter.dll</TestAssembly>
+    <TestAssembly>DevOps.Tests.HelloWorld.dll</TestAssembly>
+    <!-- <TestAssembly>DevOps.Tests.Production1.dll</TestAssembly> -->
+</TestSuite>

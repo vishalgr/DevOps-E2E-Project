@@ -1,0 +1,4 @@
+<TestSuite>
+    <TestAssembly>DevOps.Tests.TestRunner.dll</TestAssembly>
+    <TestAssembly>DevOps.Tests.Production1.dll</TestAssembly>
+</TestSuite>
