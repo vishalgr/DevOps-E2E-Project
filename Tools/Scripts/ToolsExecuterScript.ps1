@@ -48,8 +48,11 @@ Write-Host "scriptPath: $scriptPath"
 $scriptExecutionStatus = -1
 $Count = 1
 $testRunnerExe = Join-Path -Path "$scriptPath" -ChildPath "..\TestRunner\Output\bin\DevOps.TestRunner.exe"
+# Assembly directory is the combined binaries, contains TestRunner as well.
+if(-NOT (Test-Path $testRunnerExe)) {
+    $testRunnerExe = Join-Path -Path "$AssemblyDirectory" -ChildPath "..\TestRunner\Output\bin\DevOps.TestRunner.exe"
+}
 $csvConverterExe = Join-Path -Path "$scriptPath" -ChildPath "..\CSVConverter\Output\bin\DevOps.CSVConverter.exe"
-
 
 Function Log($message) {
     Write-Host ($(get-date -Format "yyyymmdd-HHMMss: ") + "$message")
