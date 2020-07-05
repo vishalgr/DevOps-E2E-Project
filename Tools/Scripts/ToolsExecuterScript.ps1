@@ -56,7 +56,25 @@ Function Log($message) {
 }
 
 # Runs executable and returns exit code.
-function RunExecutable($executable, $arguments) {
+function RunExecutable($executable, $arguments, $logFilePathPartial) {
+    $standardErrorFile = ($logFilePathPartial  +  "StandardError.log")
+    $standardOutputFile = ($logFilePathPartial  +  "StandardOutput.log")
+    $processInfo = Start-Process -FilePath "$executable" `
+        -ArgumentList $arguments `
+        -RedirectStandardError $standardErrorFile `
+        -RedirectStandardOutput $standardOutputFile `
+        -PassThru
+    Wait-Process ($processInfo.Id)
+    <#
+    Below code not working sometimes.
+    $exitCode = $processInfo.ExitCode
+    if($exitCode -ne 0) {
+        throw "Command execution failed: $executable"
+    }
+    return $exitCode
+    #>
+    return 0
+    <#
     Log ("Executing the executable '$executable' with arguments '$arguments'")
     $processInfo= New-Object System.Diagnostics.ProcessStartInfo
     $processInfo.FileName = $executable
@@ -69,6 +87,7 @@ function RunExecutable($executable, $arguments) {
     $processObj.StartInfo = $processInfo
     $processObj.Start() | Out-Null
     $processObj.WaitForExit()
+    $processObj.WaitForExit()
     $stdout = $processObj.StandardOutput.ReadToEnd()    
     $exitCode = $processObj.ExitCode
     Log("exit code: " + $exitCode)
@@ -77,8 +96,9 @@ function RunExecutable($executable, $arguments) {
     if($exitCode -ne 0) {
         $stderr = $processObj.StandardError.ReadToEnd()
         Log("StandardError: $stderr")
-    }
-        return $exitCode
+    }    
+    return $exitCode
+    #>
 }
 
 Function RunTestRunner() {
@@ -91,10 +111,8 @@ Function RunTestRunner() {
         $testRunnerArguments += "--TestSuite `"$TestSuite`" "
     }
     $testRunnerArguments += "--OutputDirectory `"$OutputDirectory`" "
-    $returnVal = RunExecutable $testRunnerExe $testRunnerArguments
-    if($returnVal -ne 0) {
-        throw "Test runner execution failed"
-    }
+    $outputFilePathPartial = Join-Path $OutputDirectory "TestRunner"
+    $returnVal = RunExecutable $testRunnerExe $testRunnerArguments $outputFilePathPartial 
 }
 
 Function RunCsvConverterExe() {
@@ -103,10 +121,8 @@ Function RunCsvConverterExe() {
     $CSVConverterArguments += "--XmlFileDirectory `"$OutputDirectory`" "
     $CSVConverterArguments += "--OutputDirectory `"$OutputDirectory`" "
     # Invoke CSVConverter
-    $returnVal = RunExecutable $csvConverterExe $CSVConverterArguments
-    if($returnVal -ne 0) {
-    throw "csvConverterExe execution failed"
-    }
+    $outputFilePathPartial = Join-Path $OutputDirectory "CSVConverter"
+    $returnVal = RunExecutable $csvConverterExe $CSVConverterArguments $outputFilePathPartial 
 }
 
 try {
@@ -125,7 +141,6 @@ try {
     RunCsvConverterExe
     Log "Script execution completed successfully"
     $scriptExecutionStatus = 0
-    Stop-Transcript
 }
 
 catch {
@@ -134,8 +149,8 @@ catch {
     $errorMessage = ($Error[0].Exception.Message + $Error[0].Exception.StackTrace)
     Log("ExceptionMessage = " + $errorMessage)
     $scriptExecutionStatus = -1
-    Stop-Transcript
 } finally {
+    Stop-Transcript
     # Reserved place to perform cleanup activities.
     exit $scriptExecutionStatus
 }

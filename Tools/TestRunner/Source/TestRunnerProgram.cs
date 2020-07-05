@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,26 +21,35 @@ namespace DevOps.TestRunner
             }
 
             ITestRunner testRunner = GetTestRunner(arguments);
-            var testAssemblies = testRunner.FindTestAssemblies(arguments.AssemblyDirectory, arguments.TestSuite.FullName);
-            if (testAssemblies.Count > 0)
-            {
-                foreach (var testAssembly in testAssemblies)
-                {
-                    int returnValue = testRunner.Execute(testAssembly, arguments.OutputDirectory);
-                    if (returnValue < 0)
-                    {
-                        exitCode = -1;
-                    }
+            string testSuite = null;
+            if (arguments.TestSuite != null) {
+                testSuite = arguments.TestSuite.FullName;
+            }
+            var testAssemblies = testRunner.FindTestAssemblies(arguments.AssemblyDirectory, testSuite);
+            exitCode = 0;
+            foreach (var testAssembly in testAssemblies) {
+                if (!File.Exists(testAssembly)) {
+                    exitCode = -1;
+                    Console.WriteLine("Test assembly does not exists: " + testAssembly);
+                    continue;
                 }
+                // Return value should not decide the status of the execution, since we care only about test execution, not whether tests are passed or failed.
+                int returnValue = testRunner.Execute(testAssembly, arguments.OutputDirectory);
+                Console.WriteLine(
+                    string.Format(
+                        "The test assembly {0} executed with the return value of {1}",
+                        testAssembly,
+                        returnValue
+                    )
+                );
+            }
+
+            if (exitCode == 0) {
                 Console.WriteLine("TestRunner executed successfully");
-                return exitCode;
+            } else {
+                Console.WriteLine("TestRunner execution failed");
             }
-            else
-            {
-                Console.WriteLine("Couldnt Find The Tests,Please Give The Correct Directory");
-                exitCode = -1;
-                return exitCode;
-            }
+            return exitCode;
         }
         
 

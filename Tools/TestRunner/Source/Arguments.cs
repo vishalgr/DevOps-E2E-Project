@@ -165,7 +165,7 @@ namespace DevOps.TestRunner
                 );
             }
 
-            if (!File.Exists(testSuite.FullName)) {
+            if ((testSuite != null) && !string.IsNullOrEmpty(testSuite.FullName) && !File.Exists(testSuite.FullName)) {
                 isValidationSuccess = false;
                 errorMessage.AppendLine(
                     "The file does not exists:" + testSuite.FullName
