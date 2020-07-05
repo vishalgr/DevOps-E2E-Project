@@ -183,8 +183,8 @@ def testExecutiuon(String testSuiteName) {
     // Execute tests
     def toolsExecuterScript =  "${WORKSPACE}\\Tools\\Scripts\\ToolsExecuterScript.ps1"
     def executor = "${WORKSPACE}\\Output\\Work\\Binaries\\NunitConsoleRunner\\nunit3-console.exe"
-    def testAssembles = "${WORKSPACE}\\Output\\work\\Combined\\"
-    def outputDirectory = "${WORKSPACE}\\Output\\TestResults\\"
+    def testAssemblies = "${WORKSPACE}\\Output\\work\\Combined"
+    def outputDirectory = "${WORKSPACE}\\Output\\TestResults"
     def testSuiteFullPath = "${WORKSPACE}\\${TEST_SUITES_DIR}${testSuiteName}"
     
     println "Executing test suite: ${testSuiteFullPath}"
@@ -202,9 +202,9 @@ def testExecutiuon(String testSuiteName) {
     // -OutputDirectory D:\Personal\Harshitha\RealizePipeline_Mani\output\TestResults
     //-TestSuite D:\Personal\RealizePipeline_Mani\Pipeline\TestSuites\TestSuite_Production1.xml
     
-    // def testRunnerCommand = "${testAssembles}DevOps.TestRunner.exe --Executor ${executor} --TestFramework NUnit --AssemblyDirectory ${testAssembles} --OutputDirectory ${outputDirectory}"
+    // def testRunnerCommand = "${testAssemblies}DevOps.TestRunner.exe --Executor ${executor} --TestFramework NUnit --AssemblyDirectory ${testAssemblies} --OutputDirectory ${outputDirectory}"
     // bat returnStatus: false, script: testRunnerCommand
-    def testExecutorCommand = "${toolsExecuterScript} -Executor ${executor} -TestFramework NUnit -AssemblyDirectory ${testAssembles} -OutputDirectory ${outputDirectory} -TestSuite ${testSuiteFullPath}"
+    def testExecutorCommand = "${toolsExecuterScript} -Executor ${executor} -TestFramework NUnit -AssemblyDirectory ${testAssemblies} -OutputDirectory ${outputDirectory} -TestSuite ${testSuiteFullPath}"
     println "testExecutorCommand: ${testExecutorCommand}"
     powershell returnStatus: false, script: testExecutorCommand
 
