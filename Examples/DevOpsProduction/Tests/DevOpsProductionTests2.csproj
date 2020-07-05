@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C614804F-13E1-4D87-AAF8-8AFC8C435C9C}</ProjectGuid>
+    <ProjectGuid>{8DF2AF47-E763-40E5-ACAB-A0C987380AE4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DevOps.Tests.Production</RootNamespace>
-    <AssemblyName>DevOps.Tests.Production</AssemblyName>
+    <AssemblyName>DevOps.Tests.Production2</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tester.cs" />
+    <Compile Include="TestCases2.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NUnit">
@@ -61,6 +61,10 @@
     <ProjectReference Include="..\Source\DevOpsProduction.csproj">
       <Project>{7d526a71-b817-4340-8758-4c99517a13a8}</Project>
       <Name>DevOpsProduction</Name>
+    </ProjectReference>
+    <ProjectReference Include="DevOpsProductionTests1.csproj">
+      <Project>{c614804f-13e1-4d87-aaf8-8afc8c435c9c}</Project>
+      <Name>DevOpsProductionTests1</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

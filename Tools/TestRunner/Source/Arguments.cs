@@ -24,6 +24,7 @@ namespace DevOps.TestRunner
         private string testFramework;
         private string executor;
         private DirectoryInfo assemblyDirectory;
+        private FileInfo testSuite;
         private DirectoryInfo outPutDirectory;
         private static readonly string currentAssembly = typeof(Arguments).Assembly.GetName().Name;
         private readonly StringBuilder errorMessage = new StringBuilder();
@@ -53,6 +54,9 @@ namespace DevOps.TestRunner
                     case "--ASSEMBLYDIRECTORY":
                         assemblyDirectory = new DirectoryInfo(commandLinArgs[++i].Trim());
                         break;
+                    case "--TESTSUITE":
+                        testSuite = new FileInfo(commandLinArgs[++i].Trim());
+                        break;
                     case "--OUTPUTDIRECTORY":
                         outPutDirectory = new DirectoryInfo(commandLinArgs[++i].Trim());
                         break;
@@ -75,14 +79,15 @@ namespace DevOps.TestRunner
                 var help = new StringBuilder("Usage information:");
                 help.AppendLine(
                     currentAssembly +
-                    " --Executor <Executor path> --TestFramework <test framework> --AssemblyDirectory <directory path> --OutputDirectory <directory path>"
+                    " --Executor <Executor path> --TestFramework <test framework> --AssemblyDirectory <directory path> --OutputDirectory <directory path> [--TestSuite <TestSuite xml path>]"
                 );
                 help.AppendLine("TestFramework: Name of the test framework. Ex: " + string.Join(", ", Enum.GetNames(typeof(TestFrameWork))));
                 help.AppendLine("AssemblyDirectory: Directory where test assemblies are located");
                 help.AppendLine("OutputDirectory: Directory where test results to be geneareated at");
+                help.AppendLine("TestSuite: [Optional Argumnet] Xml file contains test assemblies to be executed");
                 help.AppendLine(
                     "Example: " + currentAssembly +
-                    @" --Executor D:\Output\Work\Binaries\NunitConsoleRunner\nunit3-console.exe --TestFramework NUnit --AssemblyDirectory C:\Tests --OutputDirectory C:\TestResults"
+                    @" --Executor D:\Output\Work\Binaries\NunitConsoleRunner\nunit3-console.exe --TestFramework NUnit --AssemblyDirectory C:\Tests --OutputDirectory C:\TestResults --TestSuite D:\TestSuite_Production1.xml"
                 );
                 return help.ToString();
             }
@@ -115,6 +120,12 @@ namespace DevOps.TestRunner
         public TestFrameWork TestFrameWork {
             get {
                 return (TestFrameWork) Enum.Parse(typeof(TestFrameWork), testFramework);
+            }
+        }
+
+        public FileInfo TestSuite {
+            get {
+                return testSuite;
             }
         }
 
@@ -151,6 +162,13 @@ namespace DevOps.TestRunner
                 isValidationSuccess = false;
                 errorMessage.AppendLine(
                     "The file does not exists:" + executor
+                );
+            }
+
+            if (!File.Exists(testSuite.FullName)) {
+                isValidationSuccess = false;
+                errorMessage.AppendLine(
+                    "The file does not exists:" + testSuite.FullName
                 );
             }
 

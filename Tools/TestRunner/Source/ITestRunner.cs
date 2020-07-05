@@ -10,6 +10,6 @@ namespace DevOps.TestRunner
     interface ITestRunner {
         int Execute(string testAssembly, DirectoryInfo outPutDirectory);
 
-        List<string> FindTestAssemblies(DirectoryInfo searchDirectory);
+        List<string> FindTestAssemblies(DirectoryInfo searchDirectory, string TestSuite = null);
     }
 }

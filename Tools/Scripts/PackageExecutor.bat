@@ -39,20 +39,24 @@ if errorlevel 2 goto error
 echo the package is created successfully at "%output%"
 
 if exist 'dir /b "%output%\*.nupkg"' (
-    REM Without the option 'SkipDuplicate', the command fails indicating 'Response status code does not indicate success: 409 (Conflict).'
+    Rem Without the option 'SkipDuplicate', the command fails indicating 'Response status code does not indicate success: 409 (Conflict).'
+    echo "Command to push the package to the repository: %nugetPath% push '%output%\*.nupkg' -src github -SkipDuplicate"
     %nugetPath% push "%output%\*.nupkg" -src "github" -SkipDuplicate
     if errorlevel 1 goto error
-        echo pushed successfully
-    ) else (
-        goto error3
-    )
+    echo pushed successfully
 )
+
+echo "PackageExecutor file executed successfully
+exit /b 0
+
 :errorWithExit
 exit /b 1
+
 :help
 Powershell Write-host -BackgroundColor Blue "Arguments to passed : --OutputDirectory outputDirectory-path"
 Powershell Write-host -BackgroundColor Blue "Example : --OutputDirectory  "D:\MasterClone\MasterClone\Output"
 exit /b 1
+
 :error
 Powershell Write-host -BackgroundColor Red "Execution Failed %errorlevel% "
 exit /b 1

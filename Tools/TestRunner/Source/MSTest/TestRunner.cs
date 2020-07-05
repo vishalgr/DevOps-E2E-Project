@@ -15,7 +15,7 @@ namespace DevOps.TestRunner.MSTest
             throw new NotImplementedException();
         }
 
-        public List<string> FindTestAssemblies(DirectoryInfo searchDirectory) {
+        public List<string> FindTestAssemblies(DirectoryInfo searchDirectory, string TestSuite = null) {
             throw new NotImplementedException();
         }
 

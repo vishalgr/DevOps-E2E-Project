@@ -124,7 +124,7 @@ pipeline {
                         // Publish the package to the GitHub, so that customers can consume it.
                         catchError(message: "Publishing the package failed") {
                             def outputDir = pwd() + "\\Output\\work" // Should not end with "\\" because batch file adds its own "\\".
-                            bat returnStatus: false, script:"Tools\\Scripts\\PackageExecutor.bat  --OutputDirectory  ${outputDir}"
+                            bat returnStatus: false, script: "Tools\\Scripts\\PackageExecutor.bat  --OutputDirectory  ${outputDir}"
                         }
 
                         // TODO: Process results (if required)
