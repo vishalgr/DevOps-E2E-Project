@@ -20,7 +20,7 @@ namespace DevOps.TestRunner
             }
 
             ITestRunner testRunner = GetTestRunner(arguments);
-            var testAssemblies = testRunner.FindTestAssemblies(arguments.AssemblyDirectory);
+            var testAssemblies = testRunner.FindTestAssemblies(arguments.AssemblyDirectory, arguments.TestSuite.FullName);
             if (testAssemblies.Count > 0)
             {
                 foreach (var testAssembly in testAssemblies)

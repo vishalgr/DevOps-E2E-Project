@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace DevOps.TestRunner.NUnit
 {
@@ -40,15 +41,26 @@ namespace DevOps.TestRunner.NUnit
             return process.ExitCode;
         }
 
-        List<string> ITestRunner.FindTestAssemblies(DirectoryInfo searchDirectory) {
+        List<string> ITestRunner.FindTestAssemblies(DirectoryInfo searchDirectory, string TestSuite = null) {
             // Test assemble example:DevOps.Tests.TestRunner
             List<string> testAssemblies = new List<string>();
-            var testAssembliesRaw = searchDirectory.GetFiles("DevOps.Tests.*.dll").ToList();
-            testAssembliesRaw.AddRange(searchDirectory.GetFiles("DevOps.Test.*.dll"));
-            foreach (var file in testAssembliesRaw) {
-                testAssemblies.Add(file.FullName);
+            if (! string.IsNullOrEmpty(TestSuite)) {
+                //var xmlPath = @"D:\Personal\Harshitha\RealizePipeline_Mani\Pipeline\TestSuites\TestSuite_Production1.xml";
+                XDocument testResultDoc = XDocument.Load(TestSuite);
+                var testAssemblyNodes = testResultDoc.Descendants("TestAssembly");
+                foreach (var testAssembly in testAssemblyNodes) {
+                    var assemblyPath = Path.Combine(searchDirectory.FullName, testAssembly.Value);
+                    testAssemblies.Add(assemblyPath);
+                }
+            } else {
+                var testAssembliesRaw = searchDirectory.GetFiles("DevOps.Tests.*.dll").ToList();
+                testAssembliesRaw.AddRange(searchDirectory.GetFiles("DevOps.Test.*.dll"));
+                foreach (var file in testAssembliesRaw) {
+                    testAssemblies.Add(file.FullName);
+                }
             }
-             return testAssemblies;
+
+            return testAssemblies;
         }
     }
 }
