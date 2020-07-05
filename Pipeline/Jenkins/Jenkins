@@ -196,14 +196,15 @@ def testExecutiuon(String testSuiteName) {
         writeFile file:"readme.txt", text:"This directory contains logs created as part of Jenkins job: ${BUILD_URL}, and node is ${NODE_NAME}"
     }
     // Example: D:\Personal\RealizePipeline_Mani\Tools\Scripts\ToolsExecuterScript.ps1 
-    // -Executor D:\Personal\RealizePipeline_Mani\Output\Work\Binaries\NunitConsoleRunner\nunit3-console.exe 
-    // -TestFramework NUnit -AssemblyDirectory D:\Personal\RealizePipeline_Mani\Output\work\Combined 
-    // -OutputDirectory D:\Personal\RealizePipeline_Mani\output\TestResults 
+    // -Executor D:\Personal\RealizePipeline_Mani\Output\Work\Binaries\NunitConsoleRunner\nunit3-console.exe
+    // -TestFramework NUnit
+    // -AssemblyDirectory D:\Personal\RealizePipeline_Mani\Output\work\Combined 
+    // -OutputDirectory D:\Personal\Harshitha\RealizePipeline_Mani\output\TestResults
     //-TestSuite D:\Personal\RealizePipeline_Mani\Pipeline\TestSuites\TestSuite_Production1.xml
     
     // def testRunnerCommand = "${testAssembles}DevOps.TestRunner.exe --Executor ${executor} --TestFramework NUnit --AssemblyDirectory ${testAssembles} --OutputDirectory ${outputDirectory}"
     // bat returnStatus: false, script: testRunnerCommand
-    def testExecutorCommand = "${toolsExecuterScript} --Executor ${executor} --TestFramework NUnit --OutputDirectory ${outputDirectory} -TestSuite ${testSuiteFullPath}"
+    def testExecutorCommand = "${toolsExecuterScript} -Executor ${executor} -TestFramework NUnit -AssemblyDirectory ${testAssembles} -OutputDirectory ${outputDirectory} -TestSuite ${testSuiteFullPath}"
     println "testExecutorCommand: ${testExecutorCommand}"
     powershell returnStatus: false, script: testExecutorCommand
 
