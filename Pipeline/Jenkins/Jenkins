@@ -146,11 +146,17 @@ def setup() {
 }
 
 def EvaluateBranch() {
+    // TODO: Only master branch to be evaluated here.
     def expectedBranch = "origin/branches/RealizePipeline_Mani"
+    def isMatchingBranchFound = false
     if(SCM_BRANCH == null) {
-        return false
+        return isMatchingBranchFound
     }
-    return (SCM_BRANCH == expectedBranch)
+    isMatchingBranchFound = (SCM_BRANCH == expectedBranch)
+    if(isMatchingBranchFound == false) {
+        isMatchingBranchFound = (SCM_BRANCH == "origin/master")
+    }
+    return isMatchingBranchFound
 }
 
 def CopyFolder(String source, String destination, String filesToCopy="*.*", boolean recursive=true) {
@@ -170,7 +176,7 @@ def CopyFolder(String source, String destination, String filesToCopy="*.*", bool
     """
 }
 
-def testExecutiuon(string testSuiteName) {
+def testExecutiuon(String testSuiteName) {
     // Set up the test bed
     unstash STASHID_TEST_BINARIES
     // to be stashed: ToolsExecuterScript and test suits
