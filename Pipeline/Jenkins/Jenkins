@@ -51,7 +51,7 @@ pipeline {
                         SCM_COMMIT = scmVars.GIT_COMMIT 
                         // Get first 8 characters of the commit id. (common notation).
                         SCM_COMMIT = SCM_COMMIT.substring(0,8)
-                        currentBuild.displayName = "${SCM_COMMIT}" 
+                        currentBuild.displayName = "${SCM_COMMIT}"
 
                         println "SCM_URL: ${SCM_URL}"
                         println "SCM_BRANCH: ${SCM_BRANCH}"
@@ -63,10 +63,8 @@ pipeline {
                         bat returnStatus: false, script:"Build.bat --server"
                         
                         // Stash the binaries
-                        def buildPublish = "${WORKSPACE}\\${PUBLISH_DIRECTORY}"
                         def buildCombinedBinaries = "Output\\Work\\Combined\\"
                         def workBinaries = "Output\\Work\\Binaries\\"
-                        println "buildPublish: ${buildPublish}"
                         println "buildCombinedBinaries: ${buildCombinedBinaries}"
                         if(! fileExists("${buildCombinedBinaries}")) {
                             error "buildCombinedBinaries items not found"
@@ -81,9 +79,8 @@ pipeline {
         
         // All the test stages shall be placed under this test stage.
         stage('Test') {
-            // Disable test execution unless complete pipeline works flowlessly.
-            //when {  expression { return false} }
-            when {branch 'master'}
+            // Disable test execution until complete pipeline works flowlessly.
+            when { expression { return EvaluateBranch() } }
             parallel {
                 stage('Test_TestSuite1') {
                     agent { label 'win-test-slave' }
@@ -115,7 +112,7 @@ pipeline {
         }
         
         stage('Publish') {
-            when {branch 'master'}
+            when { expression { return EvaluateBranch() } }
             agent { label 'BuildServer' }
             options {
                timeout(time: 10, unit: 'MINUTES')
@@ -123,9 +120,15 @@ pipeline {
             }
             steps {
                 script{
-                   // TODO:
-                   // Publish the package to the GitHub, so that customers can consume it.
-                   println "PUBLISH_DIRECTORY: ${PUBLISH_DIRECTORY}"
+                    dir("${BUILD_DIRECTORY}") {
+                        // Publish the package to the GitHub, so that customers can consume it.
+                        catchError(message: "Publishing the package failed") {
+                            def outputDir = pwd() + "\\Output\\work" // Should not end with "\\" because batch file adds its own "\\".
+                            bat returnStatus: false, script:"Tools\\Scripts\\PackageExecutor.bat  --OutputDirectory  ${outputDir}"
+                        }
+
+                        // TODO: Process results (if required)
+                    }
                 }
             }
         }
@@ -137,6 +140,14 @@ def setup() {
     println "Current stage is: ${STAGE_NAME}"
     bat returnStatus: false, script:"WhoAmI"
     cleanWs disableDeferredWipeout: true, deleteDirs: true
+}
+
+def EvaluateBranch() {
+    def expectedBranch = "origin/branches/RealizePipeline_Mani"
+    if(SCM_BRANCH == null) {
+        return false
+    }
+    return (SCM_BRANCH == expectedBranch)
 }
 
 def CopyFolder(String source, String destination, String filesToCopy="*.*", boolean recursive=true) {
