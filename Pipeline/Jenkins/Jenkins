@@ -147,7 +147,7 @@ def setup() {
 
 def EvaluateBranch() {
     // TODO: Only master branch to be evaluated here.
-    def expectedBranch = "origin/branches/RealizePipeline_Mani"
+    def expectedBranch = "Subramanya_Test_Branch"
     def isMatchingBranchFound = false
     if(SCM_BRANCH == null) {
         return isMatchingBranchFound

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
-    <id>ScalableDevOps</id>
+    <id>ScalableDevOpsTesting</id>
     <version>1.0.0</version>
     <title>nic</title>
     <authors>vishalgr</authors>
