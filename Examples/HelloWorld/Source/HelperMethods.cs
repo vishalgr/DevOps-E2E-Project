@@ -1,9 +1,6 @@
-﻿namespace HelloWorld
-{
-    public class HelperMethods
-    {
-        public string ReturnTheInput(string inputValue)
-        {
+﻿namespace DevOps.HelloWorld {
+    public class HelperMethods {
+        public string ReturnTheInput(string inputValue) {
             return inputValue;
         }
     }

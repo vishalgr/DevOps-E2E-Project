@@ -21,6 +21,7 @@ pipeline {
         BUILD_DIRECTORY = "Product\\"
         PUBLISH_DIRECTORY = "${BUILD_DIRECTORY}Output\\Publish\\"
         TEST_RESULTS_SHARE = "\\\\ec2-34-219-107-255.us-west-2.compute.amazonaws.com\\TestResultsRepository\\"
+        TEST_SUITES_DIR = "Pipeline\\TestSuites\\"
         
         STASHID_TEST_BINARIES = "StashTestBinaries"
         
@@ -65,13 +66,15 @@ pipeline {
                         // Stash the binaries
                         def buildCombinedBinaries = "Output\\Work\\Combined\\"
                         def workBinaries = "Output\\Work\\Binaries\\"
+                        def toolsExecuterScript = "Tools\\Scripts\\ToolsExecuterScript.ps1"
+                        //def testSuites = "Pipeline\\TestSuites\\"
                         println "buildCombinedBinaries: ${buildCombinedBinaries}"
                         if(! fileExists("${buildCombinedBinaries}")) {
                             error "buildCombinedBinaries items not found"
                         }
                         //stash includes: "${buildCombinedBinaries}\\**" ,allowEmpty: true, name: "${STASHID_TEST_BINARIES}"
                         // Note: For some reasons stash with only relative path is working
-                        stash allowEmpty: true, includes: "${buildCombinedBinaries}**,${workBinaries}**", name: STASHID_TEST_BINARIES
+                        stash allowEmpty: true, includes: "${buildCombinedBinaries}**,${workBinaries}**,${TEST_SUITES_DIR}**,${toolsExecuterScript}", name: STASHID_TEST_BINARIES
                     }
                 }
             }
@@ -91,7 +94,7 @@ pipeline {
                     steps {
                         script{
                             setup()
-                            testExecutiuon()
+                            testExecutiuon("TestSuite_Production1.xml")
                         }
                     }
                 }
@@ -104,7 +107,7 @@ pipeline {
                     steps {
                         script{
                             setup()
-                            testExecutiuon()
+                            testExecutiuon("TestSuite_Production2.xml")
                         }
                     }
                 }
@@ -143,11 +146,17 @@ def setup() {
 }
 
 def EvaluateBranch() {
+    // TODO: Only master branch to be evaluated here.
     def expectedBranch = "origin/branches/RealizePipeline_Mani"
+    def isMatchingBranchFound = false
     if(SCM_BRANCH == null) {
-        return false
+        return isMatchingBranchFound
     }
-    return (SCM_BRANCH == expectedBranch)
+    isMatchingBranchFound = (SCM_BRANCH == expectedBranch)
+    if(isMatchingBranchFound == false) {
+        isMatchingBranchFound = (SCM_BRANCH == "origin/master")
+    }
+    return isMatchingBranchFound
 }
 
 def CopyFolder(String source, String destination, String filesToCopy="*.*", boolean recursive=true) {
@@ -167,26 +176,41 @@ def CopyFolder(String source, String destination, String filesToCopy="*.*", bool
     """
 }
 
-def testExecutiuon() {
+def testExecutiuon(String testSuiteName) {
     // Set up the test bed
     unstash STASHID_TEST_BINARIES
-
+    // to be stashed: ToolsExecuterScript and test suits
     // Execute tests
+    def toolsExecuterScript =  "${WORKSPACE}\\Tools\\Scripts\\ToolsExecuterScript.ps1"
     def executor = "${WORKSPACE}\\Output\\Work\\Binaries\\NunitConsoleRunner\\nunit3-console.exe"
-    def testAssembles = "${WORKSPACE}\\Output\\work\\Combined\\"
-    def testResults = "${WORKSPACE}\\Output\\TestResults\\"
+    def testAssemblies = "${WORKSPACE}\\Output\\work\\Combined"
+    def outputDirectory = "${WORKSPACE}\\Output\\TestResults"
+    def testSuiteFullPath = "${WORKSPACE}\\${TEST_SUITES_DIR}${testSuiteName}"
+    
+    println "Executing test suite: ${testSuiteFullPath}"
+    if(! fileExists(testSuiteFullPath)) {
+            error("Test suite file is not found: ${testSuiteFullPath}")
+    }
     // Write a log file so that in worst case a log file is available in the test results, contains which jenkins job actually triggered these results.
-    dir(testResults) {
+    dir(outputDirectory) {
         writeFile file:"readme.txt", text:"This directory contains logs created as part of Jenkins job: ${BUILD_URL}, and node is ${NODE_NAME}"
     }
-
-    def testRunnerCommand = "${testAssembles}DevOps.TestRunner.exe --Executor ${executor} --TestFramework NUnit --AssemblyDirectory ${testAssembles} --OutputDirectory ${testResults}"
-    println "testRunnerCommand: ${testRunnerCommand}"
-    bat returnStatus: false, script: testRunnerCommand
+    // Example: D:\Personal\RealizePipeline_Mani\Tools\Scripts\ToolsExecuterScript.ps1 
+    // -Executor D:\Personal\RealizePipeline_Mani\Output\Work\Binaries\NunitConsoleRunner\nunit3-console.exe
+    // -TestFramework NUnit
+    // -AssemblyDirectory D:\Personal\RealizePipeline_Mani\Output\work\Combined 
+    // -OutputDirectory D:\Personal\Harshitha\RealizePipeline_Mani\output\TestResults
+    //-TestSuite D:\Personal\RealizePipeline_Mani\Pipeline\TestSuites\TestSuite_Production1.xml
+    
+    // def testRunnerCommand = "${testAssemblies}DevOps.TestRunner.exe --Executor ${executor} --TestFramework NUnit --AssemblyDirectory ${testAssemblies} --OutputDirectory ${outputDirectory}"
+    // bat returnStatus: false, script: testRunnerCommand
+    def testExecutorCommand = "${toolsExecuterScript} -Executor ${executor} -TestFramework NUnit -AssemblyDirectory ${testAssemblies} -OutputDirectory ${outputDirectory} -TestSuite ${testSuiteFullPath}"
+    println "testExecutorCommand: ${testExecutorCommand}"
+    powershell returnStatus: false, script: testExecutorCommand
 
     // Copy test results to the build server share
     def now = new Date()
     def dateTimeString = now.format("yyyyMMddHHmmss", TimeZone.getTimeZone('UTC'))
     def targetResultsShare = "${TEST_RESULTS_SHARE}${SCM_COMMIT}_${dateTimeString}\\"
-    CopyFolder(testResults, targetResultsShare)
+    CopyFolder(outputDirectory, targetResultsShare)
 }

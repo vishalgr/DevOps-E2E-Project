@@ -33,8 +33,7 @@ namespace DevOps.TestRunner.NUnit
             process.Start();
             process.StandardInput.Close();
             Console.WriteLine(process.StandardOutput.ReadToEnd());
-            if (process.ExitCode != 0)
-            {
+            if (process.ExitCode != 0) {
                 Console.WriteLine(process.StandardError.ReadToEnd());
             }
             process.WaitForExit();

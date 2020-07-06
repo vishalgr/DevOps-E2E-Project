@@ -5,21 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NUnit.Framework;
+using DevOps.HelloWorld;
 
-namespace HelloWorldTests {
+namespace DevOps.Tests.HelloWorld {
     [TestFixture]
     public class HelperMethodsTests {
-        
+        private DevOps.HelloWorld.HelperMethods testObject = null;
         private static List<string> inputStrings = new List<string>() {
             "Hello World",
             "Test input string"
         };
-        private HelloWorld.HelperMethods testObject;
 
         [SetUp]
         public void TestSetup() {
             Console.WriteLine("TestSetup goes here");
-            testObject = new HelloWorld.HelperMethods();
+            testObject = new DevOps.HelloWorld.HelperMethods();
         }
 
         [TearDown]
