@@ -154,7 +154,7 @@ def EvaluateBranch() {
     }
     isMatchingBranchFound = (SCM_BRANCH == expectedBranch)
     if(isMatchingBranchFound == false) {
-        isMatchingBranchFound = (SCM_BRANCH == "origin/master")
+        isMatchingBranchFound = (SCM_BRANCH == "Subramanya_Test_Branch")
     }
     return isMatchingBranchFound
 }
