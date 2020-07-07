@@ -147,14 +147,14 @@ def setup() {
 
 def EvaluateBranch() {
     // TODO: Only master branch to be evaluated here.
-    def expectedBranch = "Subramanya_Test_Branch"
+    def expectedBranch = "origin/Subramanya_Test_Branch"
     def isMatchingBranchFound = false
     if(SCM_BRANCH == null) {
         return isMatchingBranchFound
     }
     isMatchingBranchFound = (SCM_BRANCH == expectedBranch)
     if(isMatchingBranchFound == false) {
-        isMatchingBranchFound = (SCM_BRANCH == "Subramanya_Test_Branch")
+        isMatchingBranchFound = (SCM_BRANCH == "origin/Subramanya_Test_Branch")
     }
     return isMatchingBranchFound
 }
