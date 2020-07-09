@@ -7,7 +7,7 @@
     <authors>vishalgr</authors>
     <owners>vishalgr</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-	<repository type="git" url="https://github.com/vishalgr/MasterClone1" />
+	<repository type="git" url="https://github.com/poornimayo/packagedemo" />
     <description>packages for all</description>
     <tags>ScalableDevOps</tags>
   </metadata>
