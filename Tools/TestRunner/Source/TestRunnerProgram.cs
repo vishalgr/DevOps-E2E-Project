@@ -34,7 +34,7 @@ namespace DevOps.TestRunner
                     continue;
                 }
                 // Return value should not decide the status of the execution, since we care only about test execution, not whether tests are passed or failed.
-                int returnValue = testRunner.ExecuteABC(testAssembly, arguments.OutputDirectory);
+                int returnValue = testRunner.Execute(testAssembly, arguments.OutputDirectory);
                 Console.WriteLine(
                     string.Format(
                         "The test assembly {0} executed with the return value of {1}",
