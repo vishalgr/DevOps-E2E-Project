@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
-    <id>DevopsDemo</id>
+    <id>Dev</id>
     <version>1.0.0</version>
     <title>nic</title>
     <authors>vishalgr</authors>
@@ -9,7 +9,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<repository type="git" url="https://github.com/poornimayo/packagedemo" />
     <description>packages for all</description>
-    <tags>ScalableDevOps</tags>
+    <tags>Dev</tags>
   </metadata>
   <files>
     <file src="..\..\Output\Publish\HelloWorld\*" target = "lib\HelloWorld"></file>
