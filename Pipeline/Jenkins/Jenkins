@@ -124,19 +124,6 @@ pipeline {
                         }
                     }
                 }
-				 stage('Test_TestSuite4') {
-                    agent { label 'win-test-slave' }
-                    options {
-                       timeout(time: 10, unit: 'MINUTES')
-                       timestamps()
-                    }
-                    steps {
-                        script{
-                            setup()
-                            testExecutiuon("TestSuite_Production2.xml")
-                        }
-                    }
-                }
             }
         }
         
