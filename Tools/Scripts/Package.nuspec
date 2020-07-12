@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
-<<<<<<< HEAD
-    <id>DevopsProjectDemoPack</id>
-=======
-    <id>Dev</id>
->>>>>>> 808bc518a5064b0a0dd549806f76d8004e7f303a
+    <id>ScalableDevOps3</id>
     <version>1.0.0</version>
     <title>nic</title>
-    <authors>vishalgr,subbudatta,poornimayo,harshitas</authors>
+    <authors>vishalgr</authors>
     <owners>vishalgr</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<repository type="git" url="https://github.com/poornimayo/packagedemo" />
     <description>packages for all</description>
-<<<<<<< HEAD
-    <tags>DevopsProjectDemoPack</tags>
-=======
-    <tags>Dev</tags>
->>>>>>> 808bc518a5064b0a0dd549806f76d8004e7f303a
+    <tags>ScalableDevOps</tags>
   </metadata>
   <files>
     <file src="..\..\Output\Publish\HelloWorld\*" target = "lib\HelloWorld"></file>
