@@ -39,8 +39,8 @@ namespace DevOps.TestRunner.NUnit
             process.WaitForExit();
             return process.ExitCode;
         }
-
-        List<string> ITestRunner.FindTestAssemblies(DirectoryInfo searchDirectory, string TestSuite = null) {
+(
+        List<string> ITestRunner.FindTestAssembliesCHANGEDDirectoryInfo searchDirectory, string TestSuite = null) {
             // Test assemble example:DevOps.Tests.TestRunner
             List<string> testAssemblies = new List<string>();
             if (! string.IsNullOrEmpty(TestSuite)) {
